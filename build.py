@@ -19,14 +19,14 @@ def sanitize_filename(name: str) -> str:
     return name.strip("_")
 
 
-def get_available_drugs() -> list[dict]:
-    """Scan drugs directory for available PNG files and build entries."""
+def get_available_drugs() -> dict[str, str]:
+    """Scan drugs directory for available HTML files and build entries."""
     if not DRUGS_DIR.exists():
-        return []
+        return {}
 
-    # Get all PNG files
-    png_files = {f.stem: f.name for f in DRUGS_DIR.glob("*.png")}
-    return png_files
+    # Get all HTML files
+    html_files = {f.stem: f.name for f in DRUGS_DIR.glob("*.html")}
+    return html_files
 
 
 def load_page_names() -> dict[str, list[int]]:
@@ -38,7 +38,7 @@ def load_page_names() -> dict[str, list[int]]:
 
 
 def generate_html(entries: list[dict]) -> str:
-    """Generate static HTML with PNG image viewer."""
+    """Generate static HTML with responsive drug viewer using iframes."""
     entries_json = json.dumps(entries, ensure_ascii=False, indent=2)
 
     # Generate options HTML
@@ -65,46 +65,48 @@ def generate_html(entries: list[dict]) -> str:
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background: #525659;
+            background: #f5f5f5;
         }}
 
         .header {{
             padding: 0.75rem 1rem;
-            background: #323639;
+            background: #2e7d32;
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             align-items: center;
             flex-wrap: wrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }}
 
         .search-input {{
             flex: 1;
-            min-width: 200px;
+            min-width: 150px;
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
             border: none;
             border-radius: 4px;
-            background: #525659;
-            color: #fff;
+            background: rgba(255,255,255,0.9);
+            color: #333;
             outline: none;
         }}
 
         .search-input::placeholder {{
-            color: #aaa;
+            color: #666;
         }}
 
         .search-input:focus {{
-            background: #626669;
+            background: white;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
         }}
 
         .drug-select {{
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
-            min-width: 250px;
+            min-width: 200px;
             border: none;
             border-radius: 4px;
-            background: #525659;
-            color: #fff;
+            background: rgba(255,255,255,0.9);
+            color: #333;
             cursor: pointer;
         }}
 
@@ -118,14 +120,14 @@ def generate_html(entries: list[dict]) -> str:
             font-size: 0.9rem;
             border: none;
             border-radius: 4px;
-            background: #525659;
-            color: #fff;
+            background: rgba(255,255,255,0.2);
+            color: white;
             cursor: pointer;
             transition: background 0.2s;
         }}
 
         .nav-btn:hover {{
-            background: #626669;
+            background: rgba(255,255,255,0.3);
         }}
 
         .nav-btn:disabled {{
@@ -135,74 +137,82 @@ def generate_html(entries: list[dict]) -> str:
 
         .entry-info {{
             font-size: 0.85rem;
-            color: #aaa;
+            color: rgba(255,255,255,0.9);
             white-space: nowrap;
-        }}
-
-        .zoom-controls {{
-            display: flex;
-            gap: 0.25rem;
-            align-items: center;
-        }}
-
-        .zoom-btn {{
-            padding: 0.5rem 0.75rem;
-            font-size: 0.9rem;
-            border: none;
-            border-radius: 4px;
-            background: #525659;
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.2s;
-        }}
-
-        .zoom-btn:hover {{
-            background: #626669;
-        }}
-
-        .zoom-level {{
-            color: #aaa;
-            font-size: 0.85rem;
-            min-width: 50px;
-            text-align: center;
         }}
 
         .viewer {{
             flex: 1;
             overflow: auto;
+            background: #f5f5f5;
+        }}
+
+        .viewer iframe {{
+            width: 100%;
+            height: 100%;
+            border: none;
+        }}
+
+        .loading, .no-results, .error {{
             display: flex;
+            align-items: center;
             justify-content: center;
-            padding: 20px;
-            background: #525659;
-        }}
-
-        .viewer img {{
-            max-width: 100%;
-            height: auto;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            background: white;
-            transform-origin: top center;
-        }}
-
-        .loading {{
-            color: #aaa;
-            font-size: 1.2rem;
-            padding: 2rem;
-            text-align: center;
-        }}
-
-        .no-results {{
-            color: #aaa;
-            font-size: 1.2rem;
-            padding: 2rem;
-            text-align: center;
+            height: 100%;
+            font-size: 1.1rem;
+            color: #666;
         }}
 
         .error {{
-            color: #f88;
-            font-size: 1.2rem;
-            padding: 2rem;
-            text-align: center;
+            color: #c62828;
+        }}
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {{
+            .header {{
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }}
+
+            .search-input {{
+                min-width: 120px;
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }}
+
+            .drug-select {{
+                min-width: 150px;
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }}
+
+            .nav-btn {{
+                padding: 0.4rem 0.6rem;
+                font-size: 0.85rem;
+            }}
+
+            .entry-info {{
+                font-size: 0.8rem;
+            }}
+        }}
+
+        @media (max-width: 480px) {{
+            .header {{
+                flex-direction: column;
+                align-items: stretch;
+            }}
+
+            .search-input, .drug-select {{
+                width: 100%;
+                min-width: unset;
+            }}
+
+            .nav-buttons {{
+                justify-content: center;
+            }}
+
+            .entry-info {{
+                text-align: center;
+            }}
         }}
     </style>
 </head>
@@ -212,14 +222,8 @@ def generate_html(entries: list[dict]) -> str:
         <select class="drug-select" id="drugSelect">
 {options_html}        </select>
         <div class="nav-buttons">
-            <button class="nav-btn" id="prevBtn" title="Trước">&larr; Trước</button>
-            <button class="nav-btn" id="nextBtn" title="Sau">Sau &rarr;</button>
-        </div>
-        <div class="zoom-controls">
-            <button class="zoom-btn" id="zoomOut" title="Thu nhỏ">-</button>
-            <span class="zoom-level" id="zoomLevel">100%</span>
-            <button class="zoom-btn" id="zoomIn" title="Phóng to">+</button>
-            <button class="zoom-btn" id="zoomFit" title="Vừa màn hình">Fit</button>
+            <button class="nav-btn" id="prevBtn" title="Trước">&larr;</button>
+            <button class="nav-btn" id="nextBtn" title="Sau">&rarr;</button>
         </div>
         <span class="entry-info" id="entryInfo"></span>
     </div>
@@ -234,21 +238,11 @@ def generate_html(entries: list[dict]) -> str:
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const entryInfo = document.getElementById('entryInfo');
-        const zoomInBtn = document.getElementById('zoomIn');
-        const zoomOutBtn = document.getElementById('zoomOut');
-        const zoomFitBtn = document.getElementById('zoomFit');
-        const zoomLevelSpan = document.getElementById('zoomLevel');
 
         // Embedded entries data
         const allEntries = {entries_json};
 
         let currentEntries = [...allEntries];
-        let currentScale = 1.0;
-        let currentImage = null;
-
-        function updateZoomDisplay() {{
-            zoomLevelSpan.textContent = Math.round(currentScale * 100) + '%';
-        }}
 
         function updateEntryInfo() {{
             const currentIndex = drugSelect.selectedIndex;
@@ -262,12 +256,6 @@ def generate_html(entries: list[dict]) -> str:
             nextBtn.disabled = currentIndex >= total - 1;
         }}
 
-        function applyZoom() {{
-            if (currentImage) {{
-                currentImage.style.transform = `scale(${{currentScale}})`;
-            }}
-        }}
-
         function updateViewer() {{
             const selectedIdx = drugSelect.selectedIndex;
             if (selectedIdx < 0 || currentEntries.length === 0) {{
@@ -276,39 +264,22 @@ def generate_html(entries: list[dict]) -> str:
                 return;
             }}
 
-            viewerContainer.innerHTML = '<div class="loading">Đang tải...</div>';
-
             const entry = currentEntries[selectedIdx];
-            const img = document.createElement('img');
-            img.src = 'drugs/' + entry.file;
-            img.alt = entry.name;
+            const iframe = document.createElement('iframe');
+            iframe.src = 'drugs/' + entry.file;
+            iframe.title = entry.name;
 
-            img.onload = function() {{
-                viewerContainer.innerHTML = '';
-                viewerContainer.appendChild(img);
-                currentImage = img;
-                applyZoom();
-            }};
-
-            img.onerror = function() {{
-                viewerContainer.innerHTML = '<div class="error">Không thể tải hình ảnh: ' + entry.file + '</div>';
-                currentImage = null;
-            }};
+            viewerContainer.innerHTML = '';
+            viewerContainer.appendChild(iframe);
 
             updateEntryInfo();
         }}
 
-        drugSelect.addEventListener('change', () => {{
-            currentScale = 1.0;
-            updateZoomDisplay();
-            updateViewer();
-        }});
+        drugSelect.addEventListener('change', updateViewer);
 
         prevBtn.addEventListener('click', () => {{
             if (drugSelect.selectedIndex > 0) {{
                 drugSelect.selectedIndex--;
-                currentScale = 1.0;
-                updateZoomDisplay();
                 updateViewer();
             }}
         }});
@@ -316,28 +287,8 @@ def generate_html(entries: list[dict]) -> str:
         nextBtn.addEventListener('click', () => {{
             if (drugSelect.selectedIndex < drugSelect.options.length - 1) {{
                 drugSelect.selectedIndex++;
-                currentScale = 1.0;
-                updateZoomDisplay();
                 updateViewer();
             }}
-        }});
-
-        zoomInBtn.addEventListener('click', () => {{
-            currentScale = Math.min(currentScale + 0.25, 4);
-            updateZoomDisplay();
-            applyZoom();
-        }});
-
-        zoomOutBtn.addEventListener('click', () => {{
-            currentScale = Math.max(currentScale - 0.25, 0.25);
-            updateZoomDisplay();
-            applyZoom();
-        }});
-
-        zoomFitBtn.addEventListener('click', () => {{
-            currentScale = 1.0;
-            updateZoomDisplay();
-            applyZoom();
         }});
 
         // Debounce function for search
@@ -369,8 +320,6 @@ def generate_html(entries: list[dict]) -> str:
                 drugSelect.appendChild(option);
             }});
 
-            currentScale = 1.0;
-            updateZoomDisplay();
             updateViewer();
         }}, 150);
 
@@ -384,15 +333,10 @@ def generate_html(entries: list[dict]) -> str:
                 prevBtn.click();
             }} else if (e.key === 'ArrowRight') {{
                 nextBtn.click();
-            }} else if (e.key === '+' || e.key === '=') {{
-                zoomInBtn.click();
-            }} else if (e.key === '-') {{
-                zoomOutBtn.click();
             }}
         }});
 
         // Initialize
-        updateZoomDisplay();
         updateViewer();
     </script>
 </body>
@@ -408,7 +352,7 @@ def main() -> None:
     # 1. Check drugs directory exists
     if not DRUGS_DIR.exists():
         print(f"Error: {DRUGS_DIR} does not exist.")
-        print("Run 'uv run python generate_drug_images.py' first to generate PNG images.")
+        print("Run 'uv run python generate_drug_images.py' first to generate HTML files.")
         return
 
     # 2. Load page names to get drug order and names
@@ -417,25 +361,25 @@ def main() -> None:
         print("Error: No page_names.json found.")
         return
 
-    # 3. Build entries list from page_names.json, matching to PNG files
-    png_files = get_available_drugs()
+    # 3. Build entries list from page_names.json, matching to HTML files
+    html_files = get_available_drugs()
     entries = []
 
     for name, pages in names.items():
         safe_name = sanitize_filename(name)
-        if safe_name in png_files:
+        if safe_name in html_files:
             entries.append({
                 "name": name,
-                "file": png_files[safe_name],
+                "file": html_files[safe_name],
             })
         else:
-            print(f"  Warning: No PNG found for '{name}' (expected {safe_name}.png)")
+            print(f"  Warning: No HTML found for '{name}' (expected {safe_name}.html)")
 
     # Sort by original page order
     name_to_pages = {name: pages[0] for name, pages in names.items()}
     entries.sort(key=lambda x: name_to_pages.get(x["name"], 999))
 
-    print(f"  Found {len(entries)} drug images in {DRUGS_DIR}/")
+    print(f"  Found {len(entries)} drug HTML files in {DRUGS_DIR}/")
 
     # 4. Generate index.html
     html = generate_html(entries)

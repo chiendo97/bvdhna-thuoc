@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imipenem + cilastatin - Hướng dẫn hiệu chỉnh liều</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f5f5f5;
+            padding: 16px;
+        }
+
+        .drug-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .drug-name {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 16px 20px;
+        }
+
+        .info-section {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            background: #e8f5e9;
+            color: #1b5e20;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-bottom: 1px solid #c8e6c9;
+        }
+
+        .section-content {
+            padding: 16px;
+            font-size: 0.95rem;
+        }
+
+        .section-content p {
+            margin: 8px 0;
+        }
+
+        .section-content p:first-child {
+            margin-top: 0;
+        }
+
+        .section-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Nested tables for ClCr dosing */
+        .nested-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.85rem;
+        }
+
+        .nested-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        .nested-table tr:first-child td {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .nested-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .drug-name {
+                font-size: 1.1rem;
+                padding: 12px 16px;
+            }
+
+            .section-header {
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }
+
+            .section-content {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .nested-table {
+                font-size: 0.8rem;
+            }
+
+            .nested-table td {
+                padding: 6px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nested-table {
+                font-size: 0.75rem;
+            }
+
+            .nested-table td {
+                padding: 4px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="drug-card" data-drug="Imipenem + cilastatin">
+    <div class="drug-name">Imipenem + cilastatin</div>
+    
+        <div class="info-section">
+            <div class="section-header">Dược thư Quốc gia  Việt Nam 2022</div>
+            <div class="section-content"><table class="nested-table"><tr><td>Nhiễm khuẩn</td><td>ClCr (ml/ph)</td><td>ClCr (ml/ph)</td><td>ClCr (ml/ph)</td><td>ClCr (ml/ph)</td></tr><tr><td>Nhiễm khuẩn</td><td>90 - ≥ 60</td><td>60 - ≥ 30</td><td>30 - ≥ 15</td><td>&lt; 15, HD</td></tr><tr><td>NK nghi ngờ hoặc xác định do các chủng nhạy cảm</td><td>0,4g/6h hoặc 0,5g/6h</td><td>0,3g/6h hoặc 0,5g/8h</td><td>0,2g<br>/6h hoặc 0,5g<br>/12h</td><td>0,2g<br>/6h hoặc 0,5g<br>/12h, sử dụng sau 12h kể từ lần lọc trước đó</td></tr><tr><td>NK nghi ngờ hoặc xác định do các chủng nhạy trung gian</td><td>0,75g<br>/8h</td><td>0,5g/6h</td><td>0,5g<br>/12h</td><td>0,5g<br>/12h, sử dụng sau 12h kể từ lần lọc trước đó</td></tr></table><p>- CAPD: ND.</p><p>Liều dùng tính theo imipenem</p></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">Sanford guide  (update 12.2025)</div>
+            <div class="section-content"><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng</td></tr><tr><td>Nếu liều mục tiêu 500mg/6h</td><td>Nếu liều mục tiêu 500mg/6h</td></tr><tr><td>≥ 90</td><td>Không phải chỉnh liều</td></tr><tr><td>60 - &lt; 90</td><td>400mg/6h</td></tr><tr><td>30 - &lt; 60</td><td>300mg/6h</td></tr><tr><td>15 - &lt; 30</td><td>200mg/6h</td></tr><tr><td>HD</td><td>200mg/6h (dùng sau lọc vào ngày lọc)</td></tr><tr><td>Nếu liều mục tiêu 1g/8h</td><td>Nếu liều mục tiêu 1g/8h</td></tr><tr><td>≥ 90</td><td>Không phải chỉnh liều</td></tr><tr><td>60 - &lt; 90</td><td>500mg/6h</td></tr><tr><td>30 - &lt; 60</td><td>500mg/8h</td></tr><tr><td>15 - &lt; 30</td><td>500mg/12h</td></tr><tr><td>HD</td><td>500mg/12h (dùng sau lọc vào ngày lọc)</td></tr><tr><td>Nếu liều mục tiêu 1g/6h</td><td>Nếu liều mục tiêu 1g/6h</td></tr><tr><td>≥ 90</td><td>Không phải chỉnh liều</td></tr><tr><td>60 - &lt; 90</td><td>750mg/8h</td></tr><tr><td>30 - &lt; 60</td><td>500mg/6h</td></tr><tr><td>15 - &lt; 30</td><td>500mg/12h</td></tr><tr><td>HD</td><td>500mg/12h (dùng sau lọc vào ngày lọc)</td></tr></table><p>- CAPD: ND</p><p>- CRRT: 0,5-1g/6h</p><p>Liều dùng tính theo imipenem</p></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">HD hiệu chỉnh liều ở BN suy thận - BV Bạch Mai 2023</div>
+            <div class="section-content"><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng</td></tr><tr><td>≥ 90</td><td>0,5g/6h hoặc 1g/8h<br>VK nhạy cảm trung bình: 1g/6h</td></tr><tr><td>60-89</td><td>0,5g/6h<br>VK nhạy cảm trung bình: 0,75g/8h</td></tr><tr><td>30-59</td><td>0,5g/8h<br>VK nhạy cảm trung bình: 0,5g/6h</td></tr><tr><td>15-29</td><td>0,2g/6h hoặc 0,5g/12h<br>VK nhạy cảm trung bình: 0,5g/12h</td></tr><tr><td>&lt; 15, không lọc máu</td><td>Không khuyến cáo sử dụng</td></tr><tr><td>CVVH</td><td>0,5-1g/6h (truyền kéo dài <br>1-3h)</td></tr><tr><td>CVVHD</td><td>0,5-1g/6h (truyền kéo dài <br>1-3h)</td></tr><tr><td>CVVHDF</td><td>0,5-1g/6h (truyền kéo dài <br>1-3h)</td></tr><tr><td>HD</td><td>0,5g/12h (dùng sau lọc vào ngày lọc)</td></tr></table><p>Liều dùng tính theo imipenem</p></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">Renal Pharmacotherapy 2021</div>
+            <div class="section-content"><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>≥ 90</td><td>&lt; 90- ≥ 60</td><td>&lt; 60- ≥ 30</td><td>&lt; 30- ≥ 15</td></tr><tr><td>NK nghi ngờ/đã được xác nhận do VK nhạy cảm</td><td>0,5g/6h hoặc 1g/8h</td><td>0,4g/<br>6h hoặc 0,5g/<br>6h</td><td>0,3g/<br>6h hoặc 0,5g/<br>8h</td><td>0,2g/6h hoặc 0,5g/12h</td></tr><tr><td>NK nghi ngờ/đã được xác nhận do VK<br>nhạy cảm trung bình</td><td>1g/6h</td><td>0,75g/8h</td><td>0,5g/6h</td><td>0,5g/12h</td></tr><tr><td>HD</td><td>0,2g/6h hoặc 0,5g/12h, dùng sau lọc vào ngày lọc</td><td>0,2g/6h hoặc 0,5g/12h, dùng sau lọc vào ngày lọc</td><td>0,2g/6h hoặc 0,5g/12h, dùng sau lọc vào ngày lọc</td><td>0,2g/6h hoặc 0,5g/12h, dùng sau lọc vào ngày lọc</td></tr></table><p>Liều dùng tính theo imipenem</p></div>
+        </div>
+</div>
+</body>
+</html>

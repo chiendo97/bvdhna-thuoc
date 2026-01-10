@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vancomycin - Hướng dẫn hiệu chỉnh liều</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f5f5f5;
+            padding: 16px;
+        }
+
+        .drug-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .drug-name {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 16px 20px;
+        }
+
+        .info-section {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            background: #e8f5e9;
+            color: #1b5e20;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-bottom: 1px solid #c8e6c9;
+        }
+
+        .section-content {
+            padding: 16px;
+            font-size: 0.95rem;
+        }
+
+        .section-content p {
+            margin: 8px 0;
+        }
+
+        .section-content p:first-child {
+            margin-top: 0;
+        }
+
+        .section-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Nested tables for ClCr dosing */
+        .nested-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.85rem;
+        }
+
+        .nested-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        .nested-table tr:first-child td {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .nested-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .drug-name {
+                font-size: 1.1rem;
+                padding: 12px 16px;
+            }
+
+            .section-header {
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }
+
+            .section-content {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .nested-table {
+                font-size: 0.8rem;
+            }
+
+            .nested-table td {
+                padding: 6px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nested-table {
+                font-size: 0.75rem;
+            }
+
+            .nested-table td {
+                padding: 4px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="drug-card" data-drug="Vancomycin">
+    <div class="drug-name">Vancomycin</div>
+    
+        <div class="info-section">
+            <div class="section-header">Dược thư Quốc gia  Việt Nam 2022</div>
+            <div class="section-content"><p>- Có thể giảm liều hằng ngày theo chức năng thận. Tổng liều hàng ngày có thể tính bằng khoảng 15 lần tốc độ lọc cầu thận như sau:</p><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều vancomycin (mg/24h)</td></tr><tr><td>100</td><td>1545</td></tr><tr><td>90</td><td>1390</td></tr><tr><td>80</td><td>1235</td></tr><tr><td>70</td><td>1080</td></tr><tr><td>60</td><td>925</td></tr><tr><td>50</td><td>770</td></tr><tr><td>40</td><td>620</td></tr><tr><td>30</td><td>465</td></tr><tr><td>20</td><td>310</td></tr><tr><td>10</td><td>155</td></tr></table><p>- Có thể giữ nguyên liều dùng và nới rộng khoảng cách giữa các liều:</p><p>+ ClCr 20 - 49ml/ph: Liều khởi đầu thông thường 15 - 20 mg/kg, giãn khoảng cách liều 24h.</p><p>+ ClCr &lt; 20ml/ph hoặc thay thế thận: khoảng cách liều phụ thuộc vào phương pháp thay thế thận và nồng độ đáy của vancomycin trong huyết thanh.</p></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">Sanford guide  (update 12.2025)</div>
+            <div class="section-content"><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng</td><td>Liều dùng</td></tr><tr><td>&gt; 100</td><td>Không phải chỉnh liều</td><td>Không phải chỉnh liều</td></tr><tr><td>&gt; 50 - 100</td><td>15 - 20mg/kg/12h</td><td>15 - 20mg/kg/12h</td></tr><tr><td>20 - 50</td><td>15 - 20mg/kg/24h</td><td>15 - 20mg/kg/24h</td></tr><tr><td>&lt; 20</td><td>15 - 20mg/kg/48h</td><td>15 - 20mg/kg/48h</td></tr><tr><td>CAPD</td><td>7,5mg/kg/48 - 96h</td><td>7,5mg/kg/48 - 96h</td></tr><tr><td>CRRT</td><td>7,5 - 10mg/kg/12h<br>(dịch thải 20-25ml/kg/h)</td><td>7,5 - 10mg/kg/12h<br>(dịch thải 20-25ml/kg/h)</td></tr><tr><td>SLED</td><td>LD: 20 - 25mg/kg<br>MD: 15mg/kg sau lọc (hoặc trong 60 - 90 phút cuối phiên lọc)</td><td>LD: 20 - 25mg/kg<br>MD: 15mg/kg sau lọc (hoặc trong 60 - 90 phút cuối phiên lọc)</td></tr><tr><td>HD</td><td>Màng<br>thấm thấp</td><td>Màng<br>thấm cao</td></tr><tr><td>HD</td><td>LD: 25mg/kg<br>MD: 7,5mg/kg sau lọc</td><td>LD: 25mg/kg<br>MD: 10mg/kg sau lọc</td></tr></table></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">HD hiệu chỉnh liều ở BN suy thận - BV Bạch Mai 2023</div>
+            <div class="section-content"><p>- Khuyến cáo TDM.</p><p>- Liều nạp theo cân nặng:</p><table class="nested-table"><tr><td>Cân nặng (kg)</td><td>Liều nạp (g)</td></tr><tr><td>35 - 40</td><td>1</td></tr><tr><td>41 - 50</td><td>1,25</td></tr><tr><td>51 - 60</td><td>1,5</td></tr><tr><td>61 - 70</td><td>1,75</td></tr><tr><td>&gt; 70</td><td>2</td></tr></table><p>- Liều duy trì theo mức lọc cầu thận</p><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng</td></tr><tr><td>&gt; 90</td><td>1,5g/12h</td></tr><tr><td>60 - 90</td><td>1g/12h</td></tr><tr><td>20 - 59</td><td>1g/24h</td></tr><tr><td>&lt; 20</td><td>1g/48h</td></tr></table><p>- BN lọc máu:</p><table class="nested-table"><tr><td>Lọc máu</td><td>Truyền ngắt quãng</td><td>Truyền liên tục</td></tr><tr><td>CVVH/<br>CVVHD/<br>CVVHDF</td><td>LD: <br>25-30mg/kg<br>MD: <br>0,5-0,75g<br>/12h</td><td>LD: 25-30mg/kg<br>MD: hiệu chỉnh theo chức năng thận nền, cường độ lọc và TDM.</td></tr><tr><td>HD</td><td>LD: <br>25-30mg/kg<br>MD: <br>7,5-10mg/kg<br>sau lọc.</td><td>LD: 25-30mg/kg<br>MD: hiệu chỉnh theo chức năng thận nền và TDM.</td></tr></table></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">Renal Pharmacotherapy 2021</div>
+            <div class="section-content"><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều vancomycin (mg/24h)</td></tr><tr><td>100</td><td>1545</td></tr><tr><td>90</td><td>1390</td></tr><tr><td>80</td><td>1235</td></tr><tr><td>70</td><td>1080</td></tr><tr><td>60</td><td>925</td></tr><tr><td>50</td><td>770</td></tr><tr><td>40</td><td>620</td></tr><tr><td>30</td><td>465</td></tr><tr><td>20</td><td>310</td></tr><tr><td>10</td><td>155</td></tr></table></div>
+        </div>
+</div>
+</body>
+</html>

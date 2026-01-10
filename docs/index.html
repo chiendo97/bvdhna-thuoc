@@ -16,46 +16,48 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background: #525659;
+            background: #f5f5f5;
         }
 
         .header {
             padding: 0.75rem 1rem;
-            background: #323639;
+            background: #2e7d32;
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             align-items: center;
             flex-wrap: wrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .search-input {
             flex: 1;
-            min-width: 200px;
+            min-width: 150px;
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
             border: none;
             border-radius: 4px;
-            background: #525659;
-            color: #fff;
+            background: rgba(255,255,255,0.9);
+            color: #333;
             outline: none;
         }
 
         .search-input::placeholder {
-            color: #aaa;
+            color: #666;
         }
 
         .search-input:focus {
-            background: #626669;
+            background: white;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
         }
 
         .drug-select {
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
-            min-width: 250px;
+            min-width: 200px;
             border: none;
             border-radius: 4px;
-            background: #525659;
-            color: #fff;
+            background: rgba(255,255,255,0.9);
+            color: #333;
             cursor: pointer;
         }
 
@@ -69,14 +71,14 @@
             font-size: 0.9rem;
             border: none;
             border-radius: 4px;
-            background: #525659;
-            color: #fff;
+            background: rgba(255,255,255,0.2);
+            color: white;
             cursor: pointer;
             transition: background 0.2s;
         }
 
         .nav-btn:hover {
-            background: #626669;
+            background: rgba(255,255,255,0.3);
         }
 
         .nav-btn:disabled {
@@ -86,74 +88,82 @@
 
         .entry-info {
             font-size: 0.85rem;
-            color: #aaa;
+            color: rgba(255,255,255,0.9);
             white-space: nowrap;
-        }
-
-        .zoom-controls {
-            display: flex;
-            gap: 0.25rem;
-            align-items: center;
-        }
-
-        .zoom-btn {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.9rem;
-            border: none;
-            border-radius: 4px;
-            background: #525659;
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .zoom-btn:hover {
-            background: #626669;
-        }
-
-        .zoom-level {
-            color: #aaa;
-            font-size: 0.85rem;
-            min-width: 50px;
-            text-align: center;
         }
 
         .viewer {
             flex: 1;
             overflow: auto;
+            background: #f5f5f5;
+        }
+
+        .viewer iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .loading, .no-results, .error {
             display: flex;
+            align-items: center;
             justify-content: center;
-            padding: 20px;
-            background: #525659;
-        }
-
-        .viewer img {
-            max-width: 100%;
-            height: auto;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            background: white;
-            transform-origin: top center;
-        }
-
-        .loading {
-            color: #aaa;
-            font-size: 1.2rem;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .no-results {
-            color: #aaa;
-            font-size: 1.2rem;
-            padding: 2rem;
-            text-align: center;
+            height: 100%;
+            font-size: 1.1rem;
+            color: #666;
         }
 
         .error {
-            color: #f88;
-            font-size: 1.2rem;
-            padding: 2rem;
-            text-align: center;
+            color: #c62828;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+
+            .search-input {
+                min-width: 120px;
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .drug-select {
+                min-width: 150px;
+                font-size: 0.85rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .nav-btn {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.85rem;
+            }
+
+            .entry-info {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input, .drug-select {
+                width: 100%;
+                min-width: unset;
+            }
+
+            .nav-buttons {
+                justify-content: center;
+            }
+
+            .entry-info {
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -213,14 +223,8 @@
             <option value="49" data-name="colistin">Colistin</option>
         </select>
         <div class="nav-buttons">
-            <button class="nav-btn" id="prevBtn" title="Trước">&larr; Trước</button>
-            <button class="nav-btn" id="nextBtn" title="Sau">Sau &rarr;</button>
-        </div>
-        <div class="zoom-controls">
-            <button class="zoom-btn" id="zoomOut" title="Thu nhỏ">-</button>
-            <span class="zoom-level" id="zoomLevel">100%</span>
-            <button class="zoom-btn" id="zoomIn" title="Phóng to">+</button>
-            <button class="zoom-btn" id="zoomFit" title="Vừa màn hình">Fit</button>
+            <button class="nav-btn" id="prevBtn" title="Trước">&larr;</button>
+            <button class="nav-btn" id="nextBtn" title="Sau">&rarr;</button>
         </div>
         <span class="entry-info" id="entryInfo"></span>
     </div>
@@ -235,222 +239,212 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const entryInfo = document.getElementById('entryInfo');
-        const zoomInBtn = document.getElementById('zoomIn');
-        const zoomOutBtn = document.getElementById('zoomOut');
-        const zoomFitBtn = document.getElementById('zoomFit');
-        const zoomLevelSpan = document.getElementById('zoomLevel');
 
         // Embedded entries data
         const allEntries = [
   {
     "name": "Acyclovir",
-    "file": "Acyclovir.png"
+    "file": "Acyclovir.html"
   },
   {
     "name": "Amikacin",
-    "file": "Amikacin.png"
+    "file": "Amikacin.html"
   },
   {
     "name": "Amoxicillin",
-    "file": "Amoxicillin.png"
+    "file": "Amoxicillin.html"
   },
   {
     "name": "Anidulafungin",
-    "file": "Anidulafungin.png"
+    "file": "Anidulafungin.html"
   },
   {
     "name": "Azithromycin",
-    "file": "Azithromycin.png"
+    "file": "Azithromycin.html"
   },
   {
     "name": "Caspofungin",
-    "file": "Caspofungin.png"
+    "file": "Caspofungin.html"
   },
   {
     "name": "Cefaclor",
-    "file": "Cefaclor.png"
+    "file": "Cefaclor.html"
   },
   {
     "name": "Cefalexin",
-    "file": "Cefalexin.png"
+    "file": "Cefalexin.html"
   },
   {
     "name": "Cefamandol",
-    "file": "Cefamandol.png"
+    "file": "Cefamandol.html"
   },
   {
     "name": "Cefazolin",
-    "file": "Cefazolin.png"
+    "file": "Cefazolin.html"
   },
   {
     "name": "Cefdinir",
-    "file": "Cefdinir.png"
+    "file": "Cefdinir.html"
   },
   {
     "name": "Cefepim",
-    "file": "Cefepim.png"
+    "file": "Cefepim.html"
   },
   {
     "name": "Cefixim",
-    "file": "Cefixim.png"
+    "file": "Cefixim.html"
   },
   {
     "name": "Cefoperazon",
-    "file": "Cefoperazon.png"
+    "file": "Cefoperazon.html"
   },
   {
     "name": "Cefoperazon + sulbactam",
-    "file": "Cefoperazon_+_sulbactam.png"
+    "file": "Cefoperazon_+_sulbactam.html"
   },
   {
     "name": "Cefotaxim",
-    "file": "Cefotaxim.png"
+    "file": "Cefotaxim.html"
   },
   {
     "name": "Cefotiam",
-    "file": "Cefotiam.png"
+    "file": "Cefotiam.html"
   },
   {
     "name": "Cefpirom",
-    "file": "Cefpirom.png"
+    "file": "Cefpirom.html"
   },
   {
     "name": "Ceftazidim",
-    "file": "Ceftazidim.png"
+    "file": "Ceftazidim.html"
   },
   {
     "name": "Ceftazidim + avibactam",
-    "file": "Ceftazidim_+_avibactam.png"
+    "file": "Ceftazidim_+_avibactam.html"
   },
   {
     "name": "Ceftibuten",
-    "file": "Ceftibuten.png"
+    "file": "Ceftibuten.html"
   },
   {
     "name": "Ceftizoxim",
-    "file": "Ceftizoxim.png"
+    "file": "Ceftizoxim.html"
   },
   {
     "name": "Ceftolozan + tazobactam",
-    "file": "Ceftolozan_+_tazobactam.png"
+    "file": "Ceftolozan_+_tazobactam.html"
   },
   {
     "name": "Ceftriaxon",
-    "file": "Ceftriaxon.png"
+    "file": "Ceftriaxon.html"
   },
   {
     "name": "Cefuroxim",
-    "file": "Cefuroxim.png"
+    "file": "Cefuroxim.html"
   },
   {
     "name": "Ciprofloxacin",
-    "file": "Ciprofloxacin.png"
+    "file": "Ciprofloxacin.html"
   },
   {
     "name": "Clarithromycin",
-    "file": "Clarithromycin.png"
+    "file": "Clarithromycin.html"
   },
   {
     "name": "Clindamycin",
-    "file": "Clindamycin.png"
+    "file": "Clindamycin.html"
   },
   {
     "name": "Doripenem",
-    "file": "Doripenem.png"
+    "file": "Doripenem.html"
   },
   {
     "name": "Doxycyclin",
-    "file": "Doxycyclin.png"
+    "file": "Doxycyclin.html"
   },
   {
     "name": "Ertapenem",
-    "file": "Ertapenem.png"
+    "file": "Ertapenem.html"
   },
   {
     "name": "Fluconazol",
-    "file": "Fluconazol.png"
+    "file": "Fluconazol.html"
   },
   {
     "name": "Fosfomycin",
-    "file": "Fosfomycin.png"
+    "file": "Fosfomycin.html"
   },
   {
     "name": "Gentamicin",
-    "file": "Gentamicin.png"
+    "file": "Gentamicin.html"
   },
   {
     "name": "Imipenem + cilastatin",
-    "file": "Imipenem_+_cilastatin.png"
+    "file": "Imipenem_+_cilastatin.html"
   },
   {
     "name": "Itraconazol",
-    "file": "Itraconazol.png"
+    "file": "Itraconazol.html"
   },
   {
     "name": "Levofloxacin",
-    "file": "Levofloxacin.png"
+    "file": "Levofloxacin.html"
   },
   {
     "name": "Linezolid",
-    "file": "Linezolid.png"
+    "file": "Linezolid.html"
   },
   {
     "name": "Meropenem",
-    "file": "Meropenem.png"
+    "file": "Meropenem.html"
   },
   {
     "name": "Metronidazol",
-    "file": "Metronidazol.png"
+    "file": "Metronidazol.html"
   },
   {
     "name": "Moxifloxacin",
-    "file": "Moxifloxacin.png"
+    "file": "Moxifloxacin.html"
   },
   {
     "name": "Ofloxacin",
-    "file": "Ofloxacin.png"
+    "file": "Ofloxacin.html"
   },
   {
     "name": "Piperacilin + tazobactam",
-    "file": "Piperacilin_+_tazobactam.png"
+    "file": "Piperacilin_+_tazobactam.html"
   },
   {
     "name": "Co-trimoxazol",
-    "file": "Co-trimoxazol.png"
+    "file": "Co-trimoxazol.html"
   },
   {
     "name": "Ticarcilin + acid clavulanic",
-    "file": "Ticarcilin_+_acid_clavulanic.png"
+    "file": "Ticarcilin_+_acid_clavulanic.html"
   },
   {
     "name": "Tinidazol",
-    "file": "Tinidazol.png"
+    "file": "Tinidazol.html"
   },
   {
     "name": "Tobramycin",
-    "file": "Tobramycin.png"
+    "file": "Tobramycin.html"
   },
   {
     "name": "Vancomycin",
-    "file": "Vancomycin.png"
+    "file": "Vancomycin.html"
   },
   {
     "name": "Voriconazol",
-    "file": "Voriconazol.png"
+    "file": "Voriconazol.html"
   },
   {
     "name": "Colistin",
-    "file": "Colistin.png"
+    "file": "Colistin.html"
   }
 ];
 
         let currentEntries = [...allEntries];
-        let currentScale = 1.0;
-        let currentImage = null;
-
-        function updateZoomDisplay() {
-            zoomLevelSpan.textContent = Math.round(currentScale * 100) + '%';
-        }
 
         function updateEntryInfo() {
             const currentIndex = drugSelect.selectedIndex;
@@ -464,12 +458,6 @@
             nextBtn.disabled = currentIndex >= total - 1;
         }
 
-        function applyZoom() {
-            if (currentImage) {
-                currentImage.style.transform = `scale(${currentScale})`;
-            }
-        }
-
         function updateViewer() {
             const selectedIdx = drugSelect.selectedIndex;
             if (selectedIdx < 0 || currentEntries.length === 0) {
@@ -478,39 +466,22 @@
                 return;
             }
 
-            viewerContainer.innerHTML = '<div class="loading">Đang tải...</div>';
-
             const entry = currentEntries[selectedIdx];
-            const img = document.createElement('img');
-            img.src = 'drugs/' + entry.file;
-            img.alt = entry.name;
+            const iframe = document.createElement('iframe');
+            iframe.src = 'drugs/' + entry.file;
+            iframe.title = entry.name;
 
-            img.onload = function() {
-                viewerContainer.innerHTML = '';
-                viewerContainer.appendChild(img);
-                currentImage = img;
-                applyZoom();
-            };
-
-            img.onerror = function() {
-                viewerContainer.innerHTML = '<div class="error">Không thể tải hình ảnh: ' + entry.file + '</div>';
-                currentImage = null;
-            };
+            viewerContainer.innerHTML = '';
+            viewerContainer.appendChild(iframe);
 
             updateEntryInfo();
         }
 
-        drugSelect.addEventListener('change', () => {
-            currentScale = 1.0;
-            updateZoomDisplay();
-            updateViewer();
-        });
+        drugSelect.addEventListener('change', updateViewer);
 
         prevBtn.addEventListener('click', () => {
             if (drugSelect.selectedIndex > 0) {
                 drugSelect.selectedIndex--;
-                currentScale = 1.0;
-                updateZoomDisplay();
                 updateViewer();
             }
         });
@@ -518,28 +489,8 @@
         nextBtn.addEventListener('click', () => {
             if (drugSelect.selectedIndex < drugSelect.options.length - 1) {
                 drugSelect.selectedIndex++;
-                currentScale = 1.0;
-                updateZoomDisplay();
                 updateViewer();
             }
-        });
-
-        zoomInBtn.addEventListener('click', () => {
-            currentScale = Math.min(currentScale + 0.25, 4);
-            updateZoomDisplay();
-            applyZoom();
-        });
-
-        zoomOutBtn.addEventListener('click', () => {
-            currentScale = Math.max(currentScale - 0.25, 0.25);
-            updateZoomDisplay();
-            applyZoom();
-        });
-
-        zoomFitBtn.addEventListener('click', () => {
-            currentScale = 1.0;
-            updateZoomDisplay();
-            applyZoom();
         });
 
         // Debounce function for search
@@ -571,8 +522,6 @@
                 drugSelect.appendChild(option);
             });
 
-            currentScale = 1.0;
-            updateZoomDisplay();
             updateViewer();
         }, 150);
 
@@ -586,15 +535,10 @@
                 prevBtn.click();
             } else if (e.key === 'ArrowRight') {
                 nextBtn.click();
-            } else if (e.key === '+' || e.key === '=') {
-                zoomInBtn.click();
-            } else if (e.key === '-') {
-                zoomOutBtn.click();
             }
         });
 
         // Initialize
-        updateZoomDisplay();
         updateViewer();
     </script>
 </body>

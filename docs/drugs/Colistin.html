@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colistin - Hướng dẫn hiệu chỉnh liều</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f5f5f5;
+            padding: 16px;
+        }
+        .drug-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .drug-name {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 16px 20px;
+        }
+        .section-content {
+            padding: 16px;
+            font-size: 0.95rem;
+        }
+        .section-content p {
+            margin: 8px 0;
+        }
+        .colistin-table-title {
+            font-weight: 600;
+            color: #1b5e20;
+            margin: 20px 0 10px 0;
+            padding: 8px 0;
+            border-bottom: 2px solid #c8e6c9;
+        }
+        .nested-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.85rem;
+        }
+        .nested-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        .nested-table tr:first-child td {
+            background: #e8f5e9;
+            font-weight: 600;
+        }
+        .nested-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            .drug-name { font-size: 1.1rem; padding: 12px 16px; }
+            .section-content { padding: 12px; font-size: 0.9rem; }
+            .nested-table { font-size: 0.8rem; }
+            .nested-table td { padding: 6px 8px; }
+        }
+        @media (max-width: 480px) {
+            .nested-table { font-size: 0.75rem; }
+            .nested-table td { padding: 4px 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="drug-card" data-drug="Colistin">
+        <div class="drug-name">Colistin</div>
+        <div class="section-content">
+            <p>Colistin</p><p>Đồng thuận colistin 2019 của ACCP/IDSA/ISAP/SCCM/SIDP</p><p>Khuyến cáo sử dụng liều để đạt được nồng độ trạng thái hằng định trung bình mục tiêu Css là 2 mg/l</p><p>LD: 300mg colistin base (CBA) tương đương colistimethate (CMS) 9 MUI truyền trong 0,5 - 1 giờ</p><p>MD: điều chỉnh theo độ thanh thải creatinin</p><p>- HD: Vào ngày không lọc, dùng liều 130mg CBA/ngày (tương đương 3,95MUI/ngày). Bổ sung 40mg CBA hoặc 50mg CBA (tương đương 1,2MUI hoặc 1,6MUI CMS) cho mỗi phiên lọc 3 hoặc 4 giờ, liều hàng ngày còn lại nên cho sau lọc.</p><p>- SLED: thêm 10% liều vào liều cơ bản hàng ngày trong mỗi giờ chạy SLED.</p><p>- CRRT: 220mg CBA (tương đương 6,65MUI)/12h.</p><p>Hướng dẫn sử dụng colistin tại Bệnh viện Bạch Mai:</p><p>- LD: tính theo cân nặng, tối đa 9MUI (kể cả BN suy thận, lọc máu).</p><p>- MD: tính theo mức lọc cầu thận, sử dụng sau liều nạp 8 - 12 giờ phụ thuộc vào khoảng cách đưa liều duy trì.</p><p>- Tổng liều thuốc trong 24 giờ không quá 12MUI và được chia 2 - 3 lần theo chỉ định của bác sĩ điều trị.</p><p>Liều dùng tham khảo các chế độ sau:</p><div class="colistin-table-title">Bảng 1: Khuyến cáo quốc tế về liều Colistin theo ClCr</div><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều colistin tính theo CBA (mg/ngày)</td><td>Liều colistin tính theo CMS tương đương (MUI/ngày)</td></tr><tr><td>0</td><td>130</td><td>3,95</td></tr><tr><td>5 - &lt; 10</td><td>145</td><td>4,40</td></tr><tr><td>10 - &lt; 20</td><td>160</td><td>4,85</td></tr><tr><td>20 - &lt; 30</td><td>175</td><td>5,30</td></tr><tr><td>30 - &lt; 40</td><td>195</td><td>5,90</td></tr><tr><td>40 - &lt; 50</td><td>220</td><td>6,65</td></tr><tr><td>50 - &lt; 60</td><td>245</td><td>7,40</td></tr><tr><td>60 - &lt; 70</td><td>275</td><td>8,35</td></tr><tr><td>70 - &lt; 80</td><td>300</td><td>9,00</td></tr><tr><td>80 - &lt; 90</td><td>340</td><td>10,3</td></tr><tr><td>≥ 90</td><td>360</td><td>10,9</td></tr></table><div class="colistin-table-title">Bảng 2: Hướng dẫn BV Bạch Mai 2023</div><table class="nested-table"><tr><td>Cân nặng (kg)</td><td>Liều nạp</td><td>ClCr (ml/ph)</td><td>Liều duy trì</td></tr><tr><td>NK do VK Gram âm kháng thuốc có MIC với colistin cao (&gt; 0,38 - 1 mg/l)</td><td>NK do VK Gram âm kháng thuốc có MIC với colistin cao (&gt; 0,38 - 1 mg/l)</td><td>NK do VK Gram âm kháng thuốc có MIC với colistin cao (&gt; 0,38 - 1 mg/l)</td><td>NK do VK Gram âm kháng thuốc có MIC với colistin cao (&gt; 0,38 - 1 mg/l)</td></tr><tr><td>≤ 30</td><td>4 MUI</td><td>≤ 30</td><td>2 MUI/12h</td></tr><tr><td>&gt; 30 - 40</td><td>5 MUI</td><td>&gt; 30 - 50</td><td>3 MUI/12h</td></tr><tr><td>&gt; 40 - 50</td><td>6 MUI</td><td>&gt; 50 - 80</td><td>4 MUI/12h</td></tr><tr><td>&gt; 50 - 60</td><td>7 MUI</td><td>&gt; 80 - 130</td><td>3 MUI/8h</td></tr><tr><td>&gt; 60 - 70</td><td>8 MUI</td><td>&gt; 130</td><td>4 MUI/8h</td></tr><tr><td>&gt; 70</td><td>9 MUI</td><td>HD</td><td>2 MUI/12h, bổ sung 1 MUI sau lọc</td></tr><tr><td>&gt; 70</td><td>9 MUI</td><td>CRRT</td><td>3 - 4 MUI/8h</td></tr><tr><td>NK do VK Gram âm kháng thuốc có MIC với colistin ≤ 0,38 mg/l</td><td>NK do VK Gram âm kháng thuốc có MIC với colistin ≤ 0,38 mg/l</td><td>NK do VK Gram âm kháng thuốc có MIC với colistin ≤ 0,38 mg/l</td><td>NK do VK Gram âm kháng thuốc có MIC với colistin ≤ 0,38 mg/l</td></tr><tr><td>≤ 40</td><td>2 MUI</td><td>≤ 25</td><td>1 MUI/12h</td></tr><tr><td>&gt; 40 - 50</td><td>3 MUI</td><td>&gt; 25 - 50</td><td>1 MUI/8h</td></tr><tr><td>&gt; 50 - 70</td><td>4 MUI</td><td>&gt; 50 - 70</td><td>2 MUI/12h</td></tr><tr><td>&gt; 50 - 70</td><td>4 MUI</td><td>&gt; 70</td><td>2 MUI/8h</td></tr><tr><td>&gt; 70</td><td>5 MUI</td><td>HD</td><td>2 MUI/12h, bổ sung 1 MUI sau lọc</td></tr><tr><td>&gt; 70</td><td>5 MUI</td><td>CRRT</td><td>3 - 4 MUI/8h</td></tr></table>
+        </div>
+    </div>
+</body>
+</html>

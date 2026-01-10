@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate PNG images for each drug from DOCX source."""
+"""Generate responsive HTML files for each drug from DOCX source."""
 
 import re
 from html import escape
@@ -7,15 +7,19 @@ from pathlib import Path
 
 from docx import Document
 from docx.table import Table, _Cell
-from docx.text.paragraph import Paragraph
-from playwright.sync_api import sync_playwright
 
 BASE_DIR = Path(__file__).parent
 DOCX_FILE = BASE_DIR / "data.docx"
 OUTPUT_DIR = BASE_DIR / "docs" / "drugs"
 
-# Column widths in percentage (matching original PDF layout)
-COLUMN_WIDTHS = [10, 22.5, 22.5, 22.5, 22.5]
+# Column headers for the table
+COLUMN_HEADERS = [
+    "Tên hoạt chất",
+    "Dược thư Quốc gia Việt Nam 2022",
+    "Sanford guide (update 12.2025)",
+    "HD hiệu chỉnh liều ở BN suy thận - BV Bạch Mai 2023",
+    "Renal Pharmacotherapy 2021",
+]
 
 
 def sanitize_filename(name: str) -> str:
@@ -78,25 +82,35 @@ def extract_cell_html(cell: _Cell) -> str:
 
 
 def generate_html_for_drug(drug_name: str, header_cells: list[str], drug_cells: list[str]) -> str:
-    """Generate complete HTML document for a single drug."""
-    # Build header row
-    header_html = '<tr class="header-row">'
-    for i, text in enumerate(header_cells):
-        width = COLUMN_WIDTHS[i]
-        header_html += f'<th style="width: {width}%">{escape(text)}</th>'
-    header_html += '</tr>'
+    """Generate responsive HTML fragment for a single drug (no full document wrapper)."""
+    # Build card sections for each column (skip first column - drug name)
+    sections_html = ""
+    for i in range(1, len(header_cells)):
+        header = escape(header_cells[i])
+        content = drug_cells[i] if i < len(drug_cells) else "&nbsp;"
+        sections_html += f'''
+        <div class="info-section">
+            <div class="section-header">{header}</div>
+            <div class="section-content">{content}</div>
+        </div>'''
 
-    # Build drug row
-    drug_html = '<tr class="drug-row">'
-    for i, cell_html in enumerate(drug_cells):
-        width = COLUMN_WIDTHS[i]
-        drug_html += f'<td style="width: {width}%">{cell_html}</td>'
-    drug_html += '</tr>'
+    html = f'''<div class="drug-card" data-drug="{escape(drug_name)}">
+    <div class="drug-name">{escape(drug_name)}</div>
+    {sections_html}
+</div>'''
+    return html
+
+
+def generate_standalone_html(drug_name: str, header_cells: list[str], drug_cells: list[str]) -> str:
+    """Generate complete standalone HTML document for a single drug."""
+    card_html = generate_html_for_drug(drug_name, header_cells, drug_cells)
 
     html = f'''<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{escape(drug_name)} - Hướng dẫn hiệu chỉnh liều</title>
     <style>
         * {{
             margin: 0;
@@ -105,113 +119,148 @@ def generate_html_for_drug(drug_name: str, header_cells: list[str], drug_cells: 
         }}
 
         body {{
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 11px;
-            line-height: 1.3;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f5f5f5;
+            padding: 16px;
+        }}
+
+        .drug-card {{
             background: white;
-            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
         }}
 
-        .title {{
-            text-align: center;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #1a5f1a;
+        .drug-name {{
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 16px 20px;
         }}
 
-        .main-table {{
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
+        .info-section {{
+            border-bottom: 1px solid #e0e0e0;
         }}
 
-        .main-table th,
-        .main-table td {{
-            border: 1px solid #000;
-            padding: 6px 8px;
-            vertical-align: top;
-            text-align: left;
+        .info-section:last-child {{
+            border-bottom: none;
         }}
 
-        .header-row th {{
-            background-color: #c5e0b4;
-            font-weight: bold;
-            text-align: center;
-            font-size: 12px;
+        .section-header {{
+            background: #e8f5e9;
+            color: #1b5e20;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-bottom: 1px solid #c8e6c9;
         }}
 
-        .drug-row td:first-child {{
-            font-weight: bold;
-            background-color: #e8f5e9;
+        .section-content {{
+            padding: 16px;
+            font-size: 0.95rem;
         }}
 
+        .section-content p {{
+            margin: 8px 0;
+        }}
+
+        .section-content p:first-child {{
+            margin-top: 0;
+        }}
+
+        .section-content p:last-child {{
+            margin-bottom: 0;
+        }}
+
+        /* Nested tables for ClCr dosing */
         .nested-table {{
             width: 100%;
             border-collapse: collapse;
-            margin: 5px 0;
-            font-size: 10px;
+            margin: 12px 0;
+            font-size: 0.85rem;
         }}
 
         .nested-table td {{
-            border: 1px solid #666;
-            padding: 3px 5px;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
             text-align: center;
         }}
 
         .nested-table tr:first-child td {{
-            background-color: #f0f0f0;
-            font-weight: bold;
+            background: #f5f5f5;
+            font-weight: 600;
         }}
 
-        p {{
-            margin: 3px 0;
+        .nested-table tr:nth-child(even) td {{
+            background: #fafafa;
         }}
 
         strong {{
-            font-weight: bold;
+            font-weight: 600;
+        }}
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {{
+            body {{
+                padding: 8px;
+            }}
+
+            .drug-name {{
+                font-size: 1.1rem;
+                padding: 12px 16px;
+            }}
+
+            .section-header {{
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }}
+
+            .section-content {{
+                padding: 12px;
+                font-size: 0.9rem;
+            }}
+
+            .nested-table {{
+                font-size: 0.8rem;
+            }}
+
+            .nested-table td {{
+                padding: 6px 8px;
+            }}
+        }}
+
+        @media (max-width: 480px) {{
+            .nested-table {{
+                font-size: 0.75rem;
+            }}
+
+            .nested-table td {{
+                padding: 4px 6px;
+            }}
         }}
     </style>
 </head>
 <body>
-    <div class="title">Hướng dẫn hiệu chỉnh liều kháng sinh, kháng nấm, kháng virus trên bệnh nhân người lớn suy giảm chức năng thận</div>
-    <table class="main-table">
-        {header_html}
-        {drug_html}
-    </table>
+    {card_html}
 </body>
 </html>'''
     return html
 
 
-def render_html_to_png(html: str, output_path: Path, browser, scale: int = 3) -> None:
-    """Render HTML to PNG using Playwright with high DPI scaling.
-
-    Args:
-        html: HTML content to render
-        output_path: Output PNG file path
-        browser: Playwright browser instance
-        scale: Device scale factor for high-resolution output (default 3x)
-    """
-    # Create page with high DPI scaling for crisp text
-    page = browser.new_page(
-        viewport={"width": 1400, "height": 800},
-        device_scale_factor=scale,  # 3x scale for high quality
-    )
-    page.set_content(html, wait_until="networkidle")
-
-    # Take full page screenshot at high resolution
-    page.screenshot(
-        path=str(output_path),
-        full_page=True,
-        type="png",
-    )
-    page.close()
+def save_html_file(html: str, output_path: Path) -> None:
+    """Save HTML content to file."""
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(html)
 
 
 def main() -> None:
-    """Generate PNG images for all drugs."""
-    print("Generating drug images from DOCX...")
+    """Generate responsive HTML files for all drugs."""
+    print("Generating drug HTML files from DOCX...")
 
     # Create output directory
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -222,46 +271,40 @@ def main() -> None:
 
     # Extract header row
     header_row = main_table.rows[0]
-    header_cells = [cell.text.strip().replace('\n', ' ') for cell in header_row.cells]
+    header_cells = [cell.text.strip().replace("\n", " ") for cell in header_row.cells]
     print(f"Header: {header_cells}")
 
     # Count drugs
     drug_count = len(main_table.rows) - 1
     print(f"Found {drug_count} drugs to process")
 
-    # Start Playwright
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
+    success_count = 0
+    for row_idx, row in enumerate(main_table.rows[1:], start=1):
+        drug_name = row.cells[0].text.strip()
+        print(f"\n[{row_idx}/{drug_count}] Processing: {drug_name}...")
 
-        success_count = 0
-        for row_idx, row in enumerate(main_table.rows[1:], start=1):
-            drug_name = row.cells[0].text.strip()
-            print(f"\n[{row_idx}/{drug_count}] Processing: {drug_name}...")
+        try:
+            # Extract cell HTML for each column
+            drug_cells = []
+            for cell in row.cells:
+                cell_html = extract_cell_html(cell)
+                drug_cells.append(cell_html)
 
-            try:
-                # Extract cell HTML for each column
-                drug_cells = []
-                for cell in row.cells:
-                    cell_html = extract_cell_html(cell)
-                    drug_cells.append(cell_html)
+            # Generate standalone HTML
+            html = generate_standalone_html(drug_name, header_cells, drug_cells)
 
-                # Generate HTML
-                html = generate_html_for_drug(drug_name, header_cells, drug_cells)
+            # Generate filename and save
+            safe_name = sanitize_filename(drug_name)
+            output_path = OUTPUT_DIR / f"{safe_name}.html"
 
-                # Generate filename and render
-                safe_name = sanitize_filename(drug_name)
-                output_path = OUTPUT_DIR / f"{safe_name}.png"
+            save_html_file(html, output_path)
+            print(f"  Created: {output_path.name}")
+            success_count += 1
 
-                render_html_to_png(html, output_path, browser)
-                print(f"  Created: {output_path.name}")
-                success_count += 1
+        except Exception as e:
+            print(f"  Error: {e}")
 
-            except Exception as e:
-                print(f"  Error: {e}")
-
-        browser.close()
-
-    print(f"\nDone! Created {success_count}/{drug_count} PNG images in {OUTPUT_DIR}/")
+    print(f"\nDone! Created {success_count}/{drug_count} HTML files in {OUTPUT_DIR}/")
 
 
 if __name__ == "__main__":

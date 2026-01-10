@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fosfomycin - Hướng dẫn hiệu chỉnh liều</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f5f5f5;
+            padding: 16px;
+        }
+
+        .drug-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .drug-name {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 16px 20px;
+        }
+
+        .info-section {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            background: #e8f5e9;
+            color: #1b5e20;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-bottom: 1px solid #c8e6c9;
+        }
+
+        .section-content {
+            padding: 16px;
+            font-size: 0.95rem;
+        }
+
+        .section-content p {
+            margin: 8px 0;
+        }
+
+        .section-content p:first-child {
+            margin-top: 0;
+        }
+
+        .section-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Nested tables for ClCr dosing */
+        .nested-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.85rem;
+        }
+
+        .nested-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        .nested-table tr:first-child td {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .nested-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .drug-name {
+                font-size: 1.1rem;
+                padding: 12px 16px;
+            }
+
+            .section-header {
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }
+
+            .section-content {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .nested-table {
+                font-size: 0.8rem;
+            }
+
+            .nested-table td {
+                padding: 6px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nested-table {
+                font-size: 0.75rem;
+            }
+
+            .nested-table td {
+                padding: 4px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="drug-card" data-drug="Fosfomycin">
+    <div class="drug-name">Fosfomycin</div>
+    
+        <div class="info-section">
+            <div class="section-header">Dược thư Quốc gia  Việt Nam 2022</div>
+            <div class="section-content"><p><strong>Đường tiêm</strong></p><p>- Liều thông thường:</p><p>+ Viêm màng não:</p><p>16 - 24g/24h (mỗi 6 - 8h).</p><p>+ NK tiết niệu có biến chứng: 12 - 16g/24h (mỗi 8 - 12h).</p><p>+ Các chỉ định còn lại:</p><p>12 - 24g/24h (mỗi 8 - 12h).</p><p>- Liều đầu tiên: Không phải hiệu chỉnh, tối đa 8g.</p><p>- Liều duy trì: Hiệu chỉnh theo tỷ lệ so với tổng liều trên BN có chức năng thận bình thường.</p><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng/liều thông thường</td></tr><tr><td>40</td><td>70% (chia 2 - 3 lần)</td></tr><tr><td>30</td><td>60% (chia 2 - 3 lần)</td></tr><tr><td>20</td><td>40% (chia 2 - 3 lần)</td></tr><tr><td>10</td><td>20% (chia 1 - 2 lần)</td></tr></table><p>- CVVH:</p><p>+ pha loãng sau quả lọc: không phải chỉnh liều.</p><p>+ pha loãng trước quả lọc: ND.</p><p>- HD: 2g/48h (sau lọc)</p><p><strong>Đường uống</strong>: ND.</p></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">Sanford guide  (update 12.2025)</div>
+            <div class="section-content"><p><strong>Đường tiêm</strong></p><p>- Liều thông thường:</p><p>+ Viêm màng não:</p><p>16 - 24g/24h (mỗi 6 - 8h).</p><p>+ Các chỉ định khác:</p><p>12 - 24g/24h (mỗi 8 - 12h).</p><p>- Liều đầu tiên: Không phải hiệu chỉnh, tối đa 8g.</p><p>- Liều duy trì: Hiệu chỉnh theo tỷ lệ so với tổng liều trên BN có chức năng thận bình thường.</p><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng/<br>liều thông thường</td></tr><tr><td>&gt; 40</td><td>Không phải chỉnh liều</td></tr><tr><td>&gt; 30 - 40</td><td>70% (mỗi 8 - 12h)</td></tr><tr><td>&gt; 20 - 30</td><td>60% (mỗi 8 - 12h)</td></tr><tr><td>&gt; 10 - 20</td><td>40% (mỗi 8 -12h)</td></tr><tr><td>≤ 10</td><td>20% (mỗi 12 - 24h)</td></tr><tr><td>HD</td><td>2g/48h (sau lọc)</td></tr><tr><td>CVVH</td><td>Không phải chỉnh liều<br>(dữ liệu hạn chế)</td></tr><tr><td>SLED</td><td>5g/8h hoặc liều đầu 8g, sau đó 5g sau SLED</td></tr></table><p><strong>Đường uống</strong>:</p><p>+ ClCr ≥ 10ml/ph: 3g/lần.</p><p>+ ClCr &lt; 10ml/ph: tránh dùng.</p></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">HD hiệu chỉnh liều ở BN suy thận - BV Bạch Mai 2023</div>
+            <div class="section-content"><p><strong>Đường tiêm</strong></p><p>- Liều thông thường:</p><p>+ Viêm màng não: 16 - 24g/24h (mỗi 6 - 8h).</p><p>+ Các chỉ định khác: 12 - 24g/24h (mỗi 8 - 12h).</p><p>- Liều đầu tiên: Không phải hiệu chỉnh, tối đa 8g.</p><p>- Liều duy trì: Hiệu chỉnh theo tỷ lệ so với tổng liều trên BN có chức năng thận bình thường.</p><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng/<br>liều thông thường</td></tr><tr><td>&gt; 40 - 80</td><td>Không phải chỉnh liều, nhưng cần theo dõi, đặc biệt khi liều gần mức tối đa.</td></tr><tr><td>&gt; 30 - 40</td><td>70% (chia 1 - 2 lần)</td></tr><tr><td>&gt; 20 - 30</td><td>60% (chia 1 - 2 lần)</td></tr><tr><td>&gt; 10 - 20</td><td>40% (chia 1 - 2 lần)</td></tr><tr><td>10</td><td>20% (chia 1 - 2 lần)</td></tr><tr><td>CVVH</td><td>Bù dịch sau màng: không phải chỉnh liều;<br>Bù dịch trước màng: ND</td></tr><tr><td>HD</td><td>2g/48h (Sau lọc)</td></tr></table><p><strong>Đường uống: </strong>ND</p></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">Renal Pharmacotherapy 2021</div>
+            <div class="section-content"><p>ND</p></div>
+        </div>
+</div>
+</body>
+</html>

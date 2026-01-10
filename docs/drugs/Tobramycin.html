@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tobramycin - Hướng dẫn hiệu chỉnh liều</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            background: #f5f5f5;
+            padding: 16px;
+        }
+
+        .drug-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .drug-name {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 16px 20px;
+        }
+
+        .info-section {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            background: #e8f5e9;
+            color: #1b5e20;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-bottom: 1px solid #c8e6c9;
+        }
+
+        .section-content {
+            padding: 16px;
+            font-size: 0.95rem;
+        }
+
+        .section-content p {
+            margin: 8px 0;
+        }
+
+        .section-content p:first-child {
+            margin-top: 0;
+        }
+
+        .section-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Nested tables for ClCr dosing */
+        .nested-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.85rem;
+        }
+
+        .nested-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+
+        .nested-table tr:first-child td {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .nested-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 8px;
+            }
+
+            .drug-name {
+                font-size: 1.1rem;
+                padding: 12px 16px;
+            }
+
+            .section-header {
+                font-size: 0.85rem;
+                padding: 10px 12px;
+            }
+
+            .section-content {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .nested-table {
+                font-size: 0.8rem;
+            }
+
+            .nested-table td {
+                padding: 6px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nested-table {
+                font-size: 0.75rem;
+            }
+
+            .nested-table td {
+                padding: 4px 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="drug-card" data-drug="Tobramycin">
+    <div class="drug-name">Tobramycin</div>
+    
+        <div class="info-section">
+            <div class="section-header">Dược thư Quốc gia  Việt Nam 2022</div>
+            <div class="section-content"><p>- LD: 1mg/kg</p><p>- MD: liều thấp hơn cách nhau 8h hoặc liều bình thường với khoảng cách dùng thuốc kéo dài hơn.</p><table class="nested-table"><tr><td>Chức năng thận</td><td>Phác đồ I</td><td>Phác đồ I</td><td>Phác đồ II</td></tr><tr><td>Chức năng thận</td><td>Liều điều chỉnh cách nhau 8h (mg)</td><td>Liều điều chỉnh cách nhau 8h (mg)</td><td>Liều thường với khoảng cách dùng dài hơn</td></tr><tr><td>Clcr<br>(ml/ph)</td><td>Trọng lượng</td><td>Trọng lượng</td><td>Trọng lượng/liều</td></tr><tr><td>Clcr<br>(ml/ph)</td><td>50-60kg</td><td>60-80kg</td><td>50-60kg: 60mg<br>60-80kg: 80mg</td></tr><tr><td>&gt;70</td><td>60</td><td>80</td><td>Mỗi 8h</td></tr><tr><td>40-69</td><td>30-60</td><td>50-80</td><td>Mỗi 12h</td></tr><tr><td>20-39</td><td>20-25</td><td>30-45</td><td>Mỗi 18h</td></tr><tr><td>10-19</td><td>10-18</td><td>15-24</td><td>Mỗi 24h</td></tr><tr><td>5-9</td><td>5-9</td><td>7-12</td><td>Mỗi 36h</td></tr><tr><td>&lt;4</td><td>2,5-4,5</td><td>3,5-6</td><td>Mỗi 48h</td></tr><tr><td>HD</td><td>Bổ sung 50-75% liều nạp vào cuối mỗi giai đoạn lọc</td><td>Bổ sung 50-75% liều nạp vào cuối mỗi giai đoạn lọc</td><td>Bổ sung 50-75% liều nạp vào cuối mỗi giai đoạn lọc</td></tr></table><p>- Đối với các NK đe doạ tính mạng: có thể sử dụng liều cao hơn 50% so với liều thông thường được khuyến cáo.</p></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">Sanford guide  (update 12.2025)</div>
+            <div class="section-content"><table class="nested-table"><tr><td>ClCr<br>(ml/ph)</td><td>Liều dùng</td></tr><tr><td>&gt; 50</td><td>1,7 - 2mg/kg/8h</td></tr><tr><td>10 - 50</td><td>1,7- 2mg/kg/12-24h</td></tr><tr><td>&lt; 10</td><td>1,7 - 2mg/kg/48h</td></tr><tr><td>HD</td><td>1,7 - 2mg/kg/48h, bổ sung<br>0,85 - 1mg/kg sau lọc</td></tr><tr><td>CRRT</td><td>1,7 - 2mg/kg/ 24h</td></tr><tr><td>CAPD (chỉ cho viêm phúc mạc)</td><td>0,6mg/kg/ 24h, IP</td></tr></table></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">HD hiệu chỉnh liều ở BN suy thận - BV Bạch Mai 2023</div>
+            <div class="section-content"><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng</td></tr><tr><td>≥ 80</td><td>7mg/kg/24h</td></tr><tr><td>60 - 79</td><td>5mg/kg/24h</td></tr><tr><td>40 - 59</td><td>4mg/kg/24h</td></tr><tr><td>30 - 39</td><td>5mg/kg/48h</td></tr><tr><td>20 - 29</td><td>4mg/kg/48h</td></tr><tr><td>10 - 19</td><td>3mg/kg/48h</td></tr><tr><td>&lt; 10</td><td>2,5mg/kg/48h</td></tr></table></div>
+        </div>
+        <div class="info-section">
+            <div class="section-header">Renal Pharmacotherapy 2021</div>
+            <div class="section-content"><p>- Liều khởi đầu 1 mg/kg</p><p>- Hiệu chỉnh liều sau bằng cách giảm liều và dùng cách nhau 8 giờ hoặc dùng liều bình thường với khoảng thời gian dài hơn.</p><p>Khi ClCr ≤ 70ml/ph hoặc khi biết giá trị SCr, lượng liều giảm có thể được xác định bằng cách nhân liều bình thường với phần trăm liều bình thường từ biểu đồ kèm theo.</p></div>
+        </div>
+</div>
+</body>
+</html>
