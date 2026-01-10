@@ -30,21 +30,68 @@ def sanitize_filename(name: str) -> str:
     return name.strip('_')
 
 
+def get_cell_span(cell: _Cell) -> tuple[int, int]:
+    """Get the column span and row span for a cell."""
+    tc = cell._tc
+    # Get grid span (colspan)
+    grid_span = tc.get("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}gridSpan")
+    if grid_span is not None:
+        colspan = int(grid_span)
+    else:
+        # Check tcPr for gridSpan
+        tc_pr = tc.find("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tcPr")
+        if tc_pr is not None:
+            grid_span_el = tc_pr.find(
+                "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}gridSpan"
+            )
+            if grid_span_el is not None:
+                colspan = int(
+                    grid_span_el.get(
+                        "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val", "1"
+                    )
+                )
+            else:
+                colspan = 1
+        else:
+            colspan = 1
+
+    # Row span is more complex - for now just return 1
+    rowspan = 1
+    return colspan, rowspan
+
+
 def extract_nested_table_html(table: Table) -> str:
-    """Convert a nested DOCX table to HTML."""
+    """Convert a nested DOCX table to HTML, handling merged cells."""
     html_parts = ['<table class="nested-table">']
 
     for row in table.rows:
-        html_parts.append('<tr>')
+        html_parts.append("<tr>")
+        seen_cells = set()  # Track cells we've already processed (by their XML element id)
+
         for cell in row.cells:
+            # Skip if we've already processed this cell (merged cells appear multiple times)
+            cell_id = id(cell._tc)
+            if cell_id in seen_cells:
+                continue
+            seen_cells.add(cell_id)
+
+            # Get colspan
+            colspan, rowspan = get_cell_span(cell)
+
             cell_text = escape(cell.text.strip())
             # Handle line breaks within cells
-            cell_text = cell_text.replace('\n', '<br>')
-            html_parts.append(f'<td>{cell_text}</td>')
-        html_parts.append('</tr>')
+            cell_text = cell_text.replace("\n", "<br>")
 
-    html_parts.append('</table>')
-    return ''.join(html_parts)
+            # Build td with colspan if needed
+            if colspan > 1:
+                html_parts.append(f'<td colspan="{colspan}">{cell_text}</td>')
+            else:
+                html_parts.append(f"<td>{cell_text}</td>")
+
+        html_parts.append("</tr>")
+
+    html_parts.append("</table>")
+    return "".join(html_parts)
 
 
 def extract_cell_html(cell: _Cell) -> str:
