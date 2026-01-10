@@ -87,9 +87,9 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            padding: 4px;
-            background: #333;
+            gap: 0;
+            padding: 0;
+            background: #fff;
             overflow-y: auto;
         }
 
@@ -106,6 +106,8 @@
             min-height: 100vh;
             border: none;
             flex-shrink: 0;
+            margin: 0;
+            padding: 0;
         }
 
         .no-results {
@@ -124,31 +126,59 @@
         <input type="text" class="search-input" id="search" placeholder="Search by name...">
         <select class="page-select" id="pageSelect">
             <option value="0" data-name="acyclovir">Acyclovir (1, 2)</option>
-            <option value="1" data-name="page 1">Page 1 (1)</option>
-            <option value="2" data-name="page 2">Page 2 (2)</option>
-            <option value="3" data-name="page 3">Page 3 (3)</option>
-            <option value="4" data-name="page 4">Page 4 (4)</option>
-            <option value="5" data-name="page 5">Page 5 (5)</option>
-            <option value="6" data-name="page 6">Page 6 (6)</option>
-            <option value="7" data-name="page 7">Page 7 (7)</option>
-            <option value="8" data-name="page 8">Page 8 (8)</option>
-            <option value="9" data-name="page 9">Page 9 (9)</option>
-            <option value="10" data-name="page 10">Page 10 (10)</option>
-            <option value="11" data-name="page 11">Page 11 (11)</option>
-            <option value="12" data-name="page 12">Page 12 (12)</option>
-            <option value="13" data-name="page 13">Page 13 (13)</option>
-            <option value="14" data-name="page 14">Page 14 (14)</option>
-            <option value="15" data-name="page 15">Page 15 (15)</option>
-            <option value="16" data-name="page 16">Page 16 (16)</option>
-            <option value="17" data-name="page 17">Page 17 (17)</option>
-            <option value="18" data-name="page 18">Page 18 (18)</option>
-            <option value="19" data-name="page 19">Page 19 (19)</option>
-            <option value="20" data-name="page 20">Page 20 (20)</option>
-            <option value="21" data-name="page 21">Page 21 (21)</option>
-            <option value="22" data-name="page 22">Page 22 (22)</option>
-            <option value="23" data-name="page 23">Page 23 (23)</option>
-            <option value="24" data-name="page 24">Page 24 (24)</option>
-            <option value="25" data-name="page 25">Page 25 (25)</option>
+            <option value="1" data-name="amikacin">Amikacin (2)</option>
+            <option value="2" data-name="amoxicillin">Amoxicillin (3)</option>
+            <option value="3" data-name="acid clavulanic">Acid clavulanic (3)</option>
+            <option value="4" data-name="sulbactam">Sulbactam (3, 4)</option>
+            <option value="5" data-name="anidulafungin">Anidulafungin (4)</option>
+            <option value="6" data-name="azithromycin">Azithromycin (4)</option>
+            <option value="7" data-name="caspofungin">Caspofungin (4)</option>
+            <option value="8" data-name="cefaclor">Cefaclor (4)</option>
+            <option value="9" data-name="cefalexin">Cefalexin (4)</option>
+            <option value="10" data-name="cefamandol">Cefamandol (5)</option>
+            <option value="11" data-name="cefazolin">Cefazolin (5)</option>
+            <option value="12" data-name="cefdinir">Cefdinir (5)</option>
+            <option value="13" data-name="cefepim">Cefepim (6)</option>
+            <option value="14" data-name="cefixim">Cefixim (6)</option>
+            <option value="15" data-name="cefoperazon">Cefoperazon (6)</option>
+            <option value="16" data-name="cefoperazon + sulbactam">Cefoperazon + sulbactam (7)</option>
+            <option value="17" data-name="cefotaxim">Cefotaxim (7)</option>
+            <option value="18" data-name="cefotiam">Cefotiam (7)</option>
+            <option value="19" data-name="cefpirom">Cefpirom (7, 8)</option>
+            <option value="20" data-name="ceftazidim">Ceftazidim (8)</option>
+            <option value="21" data-name="ceftazidim + avibactam">Ceftazidim + avibactam (8)</option>
+            <option value="22" data-name="ceftibuten">Ceftibuten (9)</option>
+            <option value="23" data-name="ceftizoxim">Ceftizoxim (9)</option>
+            <option value="24" data-name="ceftolozan + tazobactam">Ceftolozan + tazobactam (9)</option>
+            <option value="25" data-name="ceftriaxon">Ceftriaxon (9, 10)</option>
+            <option value="26" data-name="cefuroxim">Cefuroxim (10)</option>
+            <option value="27" data-name="cefalexin (2)">Cefalexin (2) (10)</option>
+            <option value="28" data-name="ciprofloxacin">Ciprofloxacin (11)</option>
+            <option value="29" data-name="clarithromycin">Clarithromycin (11)</option>
+            <option value="30" data-name="clindamycin">Clindamycin (11)</option>
+            <option value="31" data-name="doripenem">Doripenem (12)</option>
+            <option value="32" data-name="doxycyclin">Doxycyclin (12)</option>
+            <option value="33" data-name="ertapenem">Ertapenem (12)</option>
+            <option value="34" data-name="fluconazol">Fluconazol (13)</option>
+            <option value="35" data-name="fosfomycin">Fosfomycin (13, 14)</option>
+            <option value="36" data-name="gentamicin">Gentamicin (14, 15)</option>
+            <option value="37" data-name="imipenem + cilastatin">Imipenem + cilastatin (15)</option>
+            <option value="38" data-name="itraconazol">Itraconazol (16)</option>
+            <option value="39" data-name="levofloxacin">Levofloxacin (16)</option>
+            <option value="40" data-name="linezolid">Linezolid (17)</option>
+            <option value="41" data-name="meropenem">Meropenem (17)</option>
+            <option value="42" data-name="metronidazol">Metronidazol (17)</option>
+            <option value="43" data-name="moxifloxacin">Moxifloxacin (17)</option>
+            <option value="44" data-name="ofloxacin">Ofloxacin (18)</option>
+            <option value="45" data-name="piperacilin + tazobactam">Piperacilin + tazobactam (18)</option>
+            <option value="46" data-name="co-trimoxazol">Co-trimoxazol (19)</option>
+            <option value="47" data-name="ticarcilin + acid clavulanic">Ticarcilin + acid clavulanic (19)</option>
+            <option value="48" data-name="tinidazol">Tinidazol (20)</option>
+            <option value="49" data-name="tobramycin">Tobramycin (20)</option>
+            <option value="50" data-name="vancomycin">Vancomycin (21)</option>
+            <option value="51" data-name="voriconazol">Voriconazol (22)</option>
+            <option value="52" data-name="colistin">Colistin (23, 24)</option>
+            <option value="53" data-name="danh mục từ viết tắt">Danh mục từ viết tắt (25)</option>
         </select>
         <div class="nav-buttons">
             <button class="nav-btn" id="prevBtn" title="Previous">&larr; Prev</button>
@@ -182,16 +212,7 @@
     ]
   },
   {
-    "name": "Page 1",
-    "pages": [
-      1
-    ],
-    "files": [
-      "page_1.pdf"
-    ]
-  },
-  {
-    "name": "Page 2",
+    "name": "Amikacin",
     "pages": [
       2
     ],
@@ -200,7 +221,7 @@
     ]
   },
   {
-    "name": "Page 3",
+    "name": "Amoxicillin",
     "pages": [
       3
     ],
@@ -209,7 +230,27 @@
     ]
   },
   {
-    "name": "Page 4",
+    "name": "Acid clavulanic",
+    "pages": [
+      3
+    ],
+    "files": [
+      "page_3.pdf"
+    ]
+  },
+  {
+    "name": "Sulbactam",
+    "pages": [
+      3,
+      4
+    ],
+    "files": [
+      "page_3.pdf",
+      "page_4.pdf"
+    ]
+  },
+  {
+    "name": "Anidulafungin",
     "pages": [
       4
     ],
@@ -218,7 +259,43 @@
     ]
   },
   {
-    "name": "Page 5",
+    "name": "Azithromycin",
+    "pages": [
+      4
+    ],
+    "files": [
+      "page_4.pdf"
+    ]
+  },
+  {
+    "name": "Caspofungin",
+    "pages": [
+      4
+    ],
+    "files": [
+      "page_4.pdf"
+    ]
+  },
+  {
+    "name": "Cefaclor",
+    "pages": [
+      4
+    ],
+    "files": [
+      "page_4.pdf"
+    ]
+  },
+  {
+    "name": "Cefalexin",
+    "pages": [
+      4
+    ],
+    "files": [
+      "page_4.pdf"
+    ]
+  },
+  {
+    "name": "Cefamandol",
     "pages": [
       5
     ],
@@ -227,7 +304,25 @@
     ]
   },
   {
-    "name": "Page 6",
+    "name": "Cefazolin",
+    "pages": [
+      5
+    ],
+    "files": [
+      "page_5.pdf"
+    ]
+  },
+  {
+    "name": "Cefdinir",
+    "pages": [
+      5
+    ],
+    "files": [
+      "page_5.pdf"
+    ]
+  },
+  {
+    "name": "Cefepim",
     "pages": [
       6
     ],
@@ -236,7 +331,25 @@
     ]
   },
   {
-    "name": "Page 7",
+    "name": "Cefixim",
+    "pages": [
+      6
+    ],
+    "files": [
+      "page_6.pdf"
+    ]
+  },
+  {
+    "name": "Cefoperazon",
+    "pages": [
+      6
+    ],
+    "files": [
+      "page_6.pdf"
+    ]
+  },
+  {
+    "name": "Cefoperazon + sulbactam",
     "pages": [
       7
     ],
@@ -245,7 +358,36 @@
     ]
   },
   {
-    "name": "Page 8",
+    "name": "Cefotaxim",
+    "pages": [
+      7
+    ],
+    "files": [
+      "page_7.pdf"
+    ]
+  },
+  {
+    "name": "Cefotiam",
+    "pages": [
+      7
+    ],
+    "files": [
+      "page_7.pdf"
+    ]
+  },
+  {
+    "name": "Cefpirom",
+    "pages": [
+      7,
+      8
+    ],
+    "files": [
+      "page_7.pdf",
+      "page_8.pdf"
+    ]
+  },
+  {
+    "name": "Ceftazidim",
     "pages": [
       8
     ],
@@ -254,7 +396,16 @@
     ]
   },
   {
-    "name": "Page 9",
+    "name": "Ceftazidim + avibactam",
+    "pages": [
+      8
+    ],
+    "files": [
+      "page_8.pdf"
+    ]
+  },
+  {
+    "name": "Ceftibuten",
     "pages": [
       9
     ],
@@ -263,7 +414,36 @@
     ]
   },
   {
-    "name": "Page 10",
+    "name": "Ceftizoxim",
+    "pages": [
+      9
+    ],
+    "files": [
+      "page_9.pdf"
+    ]
+  },
+  {
+    "name": "Ceftolozan + tazobactam",
+    "pages": [
+      9
+    ],
+    "files": [
+      "page_9.pdf"
+    ]
+  },
+  {
+    "name": "Ceftriaxon",
+    "pages": [
+      9,
+      10
+    ],
+    "files": [
+      "page_9.pdf",
+      "page_10.pdf"
+    ]
+  },
+  {
+    "name": "Cefuroxim",
     "pages": [
       10
     ],
@@ -272,7 +452,16 @@
     ]
   },
   {
-    "name": "Page 11",
+    "name": "Cefalexin (2)",
+    "pages": [
+      10
+    ],
+    "files": [
+      "page_10.pdf"
+    ]
+  },
+  {
+    "name": "Ciprofloxacin",
     "pages": [
       11
     ],
@@ -281,7 +470,25 @@
     ]
   },
   {
-    "name": "Page 12",
+    "name": "Clarithromycin",
+    "pages": [
+      11
+    ],
+    "files": [
+      "page_11.pdf"
+    ]
+  },
+  {
+    "name": "Clindamycin",
+    "pages": [
+      11
+    ],
+    "files": [
+      "page_11.pdf"
+    ]
+  },
+  {
+    "name": "Doripenem",
     "pages": [
       12
     ],
@@ -290,7 +497,25 @@
     ]
   },
   {
-    "name": "Page 13",
+    "name": "Doxycyclin",
+    "pages": [
+      12
+    ],
+    "files": [
+      "page_12.pdf"
+    ]
+  },
+  {
+    "name": "Ertapenem",
+    "pages": [
+      12
+    ],
+    "files": [
+      "page_12.pdf"
+    ]
+  },
+  {
+    "name": "Fluconazol",
     "pages": [
       13
     ],
@@ -299,16 +524,29 @@
     ]
   },
   {
-    "name": "Page 14",
+    "name": "Fosfomycin",
     "pages": [
+      13,
       14
     ],
     "files": [
+      "page_13.pdf",
       "page_14.pdf"
     ]
   },
   {
-    "name": "Page 15",
+    "name": "Gentamicin",
+    "pages": [
+      14,
+      15
+    ],
+    "files": [
+      "page_14.pdf",
+      "page_15.pdf"
+    ]
+  },
+  {
+    "name": "Imipenem + cilastatin",
     "pages": [
       15
     ],
@@ -317,7 +555,7 @@
     ]
   },
   {
-    "name": "Page 16",
+    "name": "Itraconazol",
     "pages": [
       16
     ],
@@ -326,7 +564,16 @@
     ]
   },
   {
-    "name": "Page 17",
+    "name": "Levofloxacin",
+    "pages": [
+      16
+    ],
+    "files": [
+      "page_16.pdf"
+    ]
+  },
+  {
+    "name": "Linezolid",
     "pages": [
       17
     ],
@@ -335,7 +582,34 @@
     ]
   },
   {
-    "name": "Page 18",
+    "name": "Meropenem",
+    "pages": [
+      17
+    ],
+    "files": [
+      "page_17.pdf"
+    ]
+  },
+  {
+    "name": "Metronidazol",
+    "pages": [
+      17
+    ],
+    "files": [
+      "page_17.pdf"
+    ]
+  },
+  {
+    "name": "Moxifloxacin",
+    "pages": [
+      17
+    ],
+    "files": [
+      "page_17.pdf"
+    ]
+  },
+  {
+    "name": "Ofloxacin",
     "pages": [
       18
     ],
@@ -344,7 +618,16 @@
     ]
   },
   {
-    "name": "Page 19",
+    "name": "Piperacilin + tazobactam",
+    "pages": [
+      18
+    ],
+    "files": [
+      "page_18.pdf"
+    ]
+  },
+  {
+    "name": "Co-trimoxazol",
     "pages": [
       19
     ],
@@ -353,7 +636,16 @@
     ]
   },
   {
-    "name": "Page 20",
+    "name": "Ticarcilin + acid clavulanic",
+    "pages": [
+      19
+    ],
+    "files": [
+      "page_19.pdf"
+    ]
+  },
+  {
+    "name": "Tinidazol",
     "pages": [
       20
     ],
@@ -362,7 +654,16 @@
     ]
   },
   {
-    "name": "Page 21",
+    "name": "Tobramycin",
+    "pages": [
+      20
+    ],
+    "files": [
+      "page_20.pdf"
+    ]
+  },
+  {
+    "name": "Vancomycin",
     "pages": [
       21
     ],
@@ -371,7 +672,7 @@
     ]
   },
   {
-    "name": "Page 22",
+    "name": "Voriconazol",
     "pages": [
       22
     ],
@@ -380,25 +681,18 @@
     ]
   },
   {
-    "name": "Page 23",
+    "name": "Colistin",
     "pages": [
-      23
-    ],
-    "files": [
-      "page_23.pdf"
-    ]
-  },
-  {
-    "name": "Page 24",
-    "pages": [
+      23,
       24
     ],
     "files": [
+      "page_23.pdf",
       "page_24.pdf"
     ]
   },
   {
-    "name": "Page 25",
+    "name": "Danh mục từ viết tắt",
     "pages": [
       25
     ],

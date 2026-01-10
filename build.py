@@ -142,9 +142,9 @@ def generate_html(entries: list[dict]) -> str:
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            padding: 4px;
-            background: #333;
+            gap: 0;
+            padding: 0;
+            background: #fff;
             overflow-y: auto;
         }}
 
@@ -161,6 +161,8 @@ def generate_html(entries: list[dict]) -> str:
             min-height: 100vh;
             border: none;
             flex-shrink: 0;
+            margin: 0;
+            padding: 0;
         }}
 
         .no-results {{

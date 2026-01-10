@@ -1,81 +1,56 @@
 {
-  "Acyclovir": [
-    1,
-    2
-  ],
-  "Page 1": [
-    1
-  ],
-  "Page 2": [
-    2
-  ],
-  "Page 3": [
-    3
-  ],
-  "Page 4": [
-    4
-  ],
-  "Page 5": [
-    5
-  ],
-  "Page 6": [
-    6
-  ],
-  "Page 7": [
-    7
-  ],
-  "Page 8": [
-    8
-  ],
-  "Page 9": [
-    9
-  ],
-  "Page 10": [
-    10
-  ],
-  "Page 11": [
-    11
-  ],
-  "Page 12": [
-    12
-  ],
-  "Page 13": [
-    13
-  ],
-  "Page 14": [
-    14
-  ],
-  "Page 15": [
-    15
-  ],
-  "Page 16": [
-    16
-  ],
-  "Page 17": [
-    17
-  ],
-  "Page 18": [
-    18
-  ],
-  "Page 19": [
-    19
-  ],
-  "Page 20": [
-    20
-  ],
-  "Page 21": [
-    21
-  ],
-  "Page 22": [
-    22
-  ],
-  "Page 23": [
-    23
-  ],
-  "Page 24": [
-    24
-  ],
-  "Page 25": [
-    25
-  ]
+  "Acyclovir": [1, 2],
+  "Amikacin": [2],
+  "Amoxicillin": [3],
+  "Acid clavulanic": [3],
+  "Sulbactam": [3, 4],
+  "Anidulafungin": [4],
+  "Azithromycin": [4],
+  "Caspofungin": [4],
+  "Cefaclor": [4],
+  "Cefalexin": [4],
+  "Cefamandol": [5],
+  "Cefazolin": [5],
+  "Cefdinir": [5],
+  "Cefepim": [6],
+  "Cefixim": [6],
+  "Cefoperazon": [6],
+  "Cefoperazon + sulbactam": [7],
+  "Cefotaxim": [7],
+  "Cefotiam": [7],
+  "Cefpirom": [7, 8],
+  "Ceftazidim": [8],
+  "Ceftazidim + avibactam": [8],
+  "Ceftibuten": [9],
+  "Ceftizoxim": [9],
+  "Ceftolozan + tazobactam": [9],
+  "Ceftriaxon": [9, 10],
+  "Cefuroxim": [10],
+  "Cefalexin (2)": [10],
+  "Ciprofloxacin": [11],
+  "Clarithromycin": [11],
+  "Clindamycin": [11],
+  "Doripenem": [12],
+  "Doxycyclin": [12],
+  "Ertapenem": [12],
+  "Fluconazol": [13],
+  "Fosfomycin": [13, 14],
+  "Gentamicin": [14, 15],
+  "Imipenem + cilastatin": [15],
+  "Itraconazol": [16],
+  "Levofloxacin": [16],
+  "Linezolid": [17],
+  "Meropenem": [17],
+  "Metronidazol": [17],
+  "Moxifloxacin": [17],
+  "Ofloxacin": [18],
+  "Piperacilin + tazobactam": [18],
+  "Co-trimoxazol": [19],
+  "Ticarcilin + acid clavulanic": [19],
+  "Tinidazol": [20],
+  "Tobramycin": [20],
+  "Vancomycin": [21],
+  "Voriconazol": [22],
+  "Colistin": [23, 24],
+  "Danh mục từ viết tắt": [25]
 }
