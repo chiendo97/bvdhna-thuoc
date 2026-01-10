@@ -36,7 +36,7 @@ def load_page_names() -> dict[str, list[int]]:
 
 
 def generate_html(entries: list[dict]) -> str:
-    """Generate static HTML with embedded entries data."""
+    """Generate static HTML with PDF.js viewer."""
     entries_json = json.dumps(entries, ensure_ascii=False, indent=2)
 
     # Generate options HTML
@@ -46,19 +46,13 @@ def generate_html(entries: list[dict]) -> str:
         pages_str = ", ".join(str(p) for p in entry["pages"])
         options_html += f'            <option value="{i}" data-name="{name.lower()}">{name} ({pages_str})</option>\n'
 
-    # Generate initial embed
-    if entries:
-        first_file = entries[0]["files"][0]
-        initial_embed = f'<embed src="pages/{first_file}" type="application/pdf">'
-    else:
-        initial_embed = '<div class="no-results">No PDF pages available</div>'
-
     html = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
     <style>
         * {{
             margin: 0;
@@ -71,108 +65,133 @@ def generate_html(entries: list[dict]) -> str:
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background: #f0f0f0;
+            background: #525659;
         }}
 
         .header {{
-            padding: 1rem;
-            background: #ffffff;
-            border-bottom: 1px solid #ddd;
+            padding: 0.75rem 1rem;
+            background: #323639;
             display: flex;
             gap: 1rem;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
         }}
 
         .search-input {{
             flex: 1;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            min-width: 200px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            background: #525659;
+            color: #fff;
             outline: none;
-            transition: border-color 0.2s;
+        }}
+
+        .search-input::placeholder {{
+            color: #aaa;
         }}
 
         .search-input:focus {{
-            border-color: #0066cc;
+            background: #626669;
         }}
 
         .page-select {{
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            min-width: 250px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background: white;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            min-width: 200px;
+            border: none;
+            border-radius: 4px;
+            background: #525659;
+            color: #fff;
             cursor: pointer;
         }}
 
         .nav-buttons {{
             display: flex;
-            gap: 0.5rem;
+            gap: 0.25rem;
         }}
 
         .nav-btn {{
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background: white;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            background: #525659;
+            color: #fff;
             cursor: pointer;
             transition: background 0.2s;
         }}
 
         .nav-btn:hover {{
-            background: #f5f5f5;
+            background: #626669;
         }}
 
         .nav-btn:disabled {{
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
         }}
 
         .page-info {{
-            font-size: 0.9rem;
-            color: #666;
+            font-size: 0.85rem;
+            color: #aaa;
             white-space: nowrap;
+        }}
+
+        .zoom-controls {{
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+        }}
+
+        .zoom-btn {{
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 4px;
+            background: #525659;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s;
+        }}
+
+        .zoom-btn:hover {{
+            background: #626669;
+        }}
+
+        .zoom-level {{
+            color: #aaa;
+            font-size: 0.85rem;
+            min-width: 50px;
+            text-align: center;
         }}
 
         .viewer {{
             flex: 1;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 0;
-            padding: 0;
-            background: #fff;
-            overflow-y: auto;
+            align-items: center;
+            padding: 20px;
+            gap: 10px;
         }}
 
-        .viewer.single-page embed {{
-            width: 100%;
-            height: 100%;
-            min-height: 100%;
-            border: none;
+        .viewer canvas {{
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            background: white;
         }}
 
-        .viewer.dual-page embed {{
-            width: 100%;
-            height: 100vh;
-            min-height: 100vh;
-            border: none;
-            flex-shrink: 0;
-            margin: 0;
-            padding: 0;
+        .loading {{
+            color: #aaa;
+            font-size: 1.2rem;
+            padding: 2rem;
         }}
 
         .no-results {{
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
+            color: #aaa;
             font-size: 1.2rem;
-            background: #333;
+            padding: 2rem;
         }}
     </style>
 </head>
@@ -185,24 +204,44 @@ def generate_html(entries: list[dict]) -> str:
             <button class="nav-btn" id="prevBtn" title="Previous">&larr; Prev</button>
             <button class="nav-btn" id="nextBtn" title="Next">Next &rarr;</button>
         </div>
+        <div class="zoom-controls">
+            <button class="zoom-btn" id="zoomOut" title="Zoom out">-</button>
+            <span class="zoom-level" id="zoomLevel">100%</span>
+            <button class="zoom-btn" id="zoomIn" title="Zoom in">+</button>
+            <button class="zoom-btn" id="zoomFit" title="Fit width">Fit</button>
+        </div>
         <span class="page-info" id="pageInfo"></span>
     </div>
-    <div class="viewer single-page" id="viewerContainer">
-        {initial_embed}
+    <div class="viewer" id="viewerContainer">
+        <div class="loading">Loading PDF...</div>
     </div>
 
-    <script>
+    <script type="module">
+        // Import PDF.js
+        const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
+
         const search = document.getElementById('search');
         const pageSelect = document.getElementById('pageSelect');
         const viewerContainer = document.getElementById('viewerContainer');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const pageInfo = document.getElementById('pageInfo');
+        const zoomIn = document.getElementById('zoomIn');
+        const zoomOut = document.getElementById('zoomOut');
+        const zoomFit = document.getElementById('zoomFit');
+        const zoomLevel = document.getElementById('zoomLevel');
 
         // Embedded entries data
         const allEntries = {entries_json};
 
         let currentEntries = [...allEntries];
+        let currentScale = 1.5;
+        let loadedPdfs = [];
+
+        function updateZoomDisplay() {{
+            zoomLevel.textContent = Math.round(currentScale * 100 / 1.5) + '%';
+        }}
 
         function updatePageInfo() {{
             const currentIndex = pageSelect.selectedIndex;
@@ -216,30 +255,74 @@ def generate_html(entries: list[dict]) -> str:
             nextBtn.disabled = currentIndex >= total - 1;
         }}
 
-        function updateViewer() {{
+        async function renderPage(pdf, pageNum, container) {{
+            const page = await pdf.getPage(pageNum);
+            const viewport = page.getViewport({{ scale: currentScale }});
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            await page.render({{
+                canvasContext: context,
+                viewport: viewport
+            }}).promise;
+
+            container.appendChild(canvas);
+        }}
+
+        async function loadAndRenderPdf(url, container) {{
+            try {{
+                const pdf = await pdfjsLib.getDocument(url).promise;
+                loadedPdfs.push(pdf);
+
+                // Render all pages of this PDF
+                for (let i = 1; i <= pdf.numPages; i++) {{
+                    await renderPage(pdf, i, container);
+                }}
+            }} catch (error) {{
+                console.error('Error loading PDF:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'no-results';
+                errorDiv.textContent = 'Error loading PDF';
+                container.appendChild(errorDiv);
+            }}
+        }}
+
+        async function updateViewer() {{
             const selectedIdx = pageSelect.selectedIndex;
             if (selectedIdx < 0 || currentEntries.length === 0) {{
                 viewerContainer.innerHTML = '<div class="no-results">No matching entries found</div>';
-                viewerContainer.className = 'viewer';
                 updatePageInfo();
                 return;
             }}
 
+            viewerContainer.innerHTML = '<div class="loading">Loading PDF...</div>';
+            loadedPdfs = [];
+
             const entry = currentEntries[selectedIdx];
             viewerContainer.innerHTML = '';
 
-            // Set class based on page count
-            viewerContainer.className = entry.files.length === 1 ? 'viewer single-page' : 'viewer dual-page';
-
-            // Create embed for each page
-            entry.files.forEach(file => {{
-                const embed = document.createElement('embed');
-                embed.src = 'pages/' + file;
-                embed.type = 'application/pdf';
-                viewerContainer.appendChild(embed);
-            }});
+            // Load and render each PDF file
+            for (const file of entry.files) {{
+                await loadAndRenderPdf('pages/' + file, viewerContainer);
+            }}
 
             updatePageInfo();
+        }}
+
+        async function rerender() {{
+            const selectedIdx = pageSelect.selectedIndex;
+            if (selectedIdx < 0 || currentEntries.length === 0) return;
+
+            viewerContainer.innerHTML = '';
+
+            for (const pdf of loadedPdfs) {{
+                for (let i = 1; i <= pdf.numPages; i++) {{
+                    await renderPage(pdf, i, viewerContainer);
+                }}
+            }}
         }}
 
         pageSelect.addEventListener('change', updateViewer);
@@ -255,6 +338,31 @@ def generate_html(entries: list[dict]) -> str:
             if (pageSelect.selectedIndex < pageSelect.options.length - 1) {{
                 pageSelect.selectedIndex++;
                 updateViewer();
+            }}
+        }});
+
+        zoomIn.addEventListener('click', () => {{
+            currentScale = Math.min(currentScale + 0.25, 4);
+            updateZoomDisplay();
+            rerender();
+        }});
+
+        zoomOut.addEventListener('click', () => {{
+            currentScale = Math.max(currentScale - 0.25, 0.5);
+            updateZoomDisplay();
+            rerender();
+        }});
+
+        zoomFit.addEventListener('click', () => {{
+            // Calculate scale to fit container width
+            const containerWidth = viewerContainer.clientWidth - 40; // padding
+            if (loadedPdfs.length > 0) {{
+                loadedPdfs[0].getPage(1).then(page => {{
+                    const viewport = page.getViewport({{ scale: 1 }});
+                    currentScale = containerWidth / viewport.width;
+                    updateZoomDisplay();
+                    rerender();
+                }});
             }}
         }});
 
@@ -294,17 +402,22 @@ def generate_html(entries: list[dict]) -> str:
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {{
-            if (e.target === search) return; // Don't interfere with search input
+            if (e.target === search) return;
 
             if (e.key === 'ArrowLeft') {{
                 prevBtn.click();
             }} else if (e.key === 'ArrowRight') {{
                 nextBtn.click();
+            }} else if (e.key === '+' || e.key === '=') {{
+                zoomIn.click();
+            }} else if (e.key === '-') {{
+                zoomOut.click();
             }}
         }});
 
         // Initialize
-        updatePageInfo();
+        updateZoomDisplay();
+        updateViewer();
     </script>
 </body>
 </html>'''
