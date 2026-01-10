@@ -2,29 +2,31 @@
 """Build script to generate static site for GitHub Pages."""
 
 import json
+import re
 from pathlib import Path
-
-from pypdf import PdfReader, PdfWriter
 
 BASE_DIR = Path(__file__).parent
 DOCS_DIR = BASE_DIR / "docs"
-PAGES_DIR = DOCS_DIR / "pages"
-SOURCE_PDF = BASE_DIR / "data.pdf"
+DRUGS_DIR = DOCS_DIR / "drugs"
 NAMES_FILE = BASE_DIR / "page_names.json"
 
 
-def split_pdf() -> int:
-    """Split PDF into individual pages. Returns page count."""
-    PAGES_DIR.mkdir(parents=True, exist_ok=True)
-    reader = PdfReader(SOURCE_PDF)
+def sanitize_filename(name: str) -> str:
+    """Convert drug name to a safe filename (must match generate_drug_images.py)."""
+    name = re.sub(r'[<>:"/\\|?*]', "_", name)
+    name = name.replace(" ", "_")
+    name = re.sub(r"_+", "_", name)
+    return name.strip("_")
 
-    for i, page in enumerate(reader.pages, 1):
-        writer = PdfWriter()
-        writer.add_page(page)
-        with open(PAGES_DIR / f"page_{i}.pdf", "wb") as f:
-            writer.write(f)
 
-    return len(reader.pages)
+def get_available_drugs() -> list[dict]:
+    """Scan drugs directory for available PNG files and build entries."""
+    if not DRUGS_DIR.exists():
+        return []
+
+    # Get all PNG files
+    png_files = {f.stem: f.name for f in DRUGS_DIR.glob("*.png")}
+    return png_files
 
 
 def load_page_names() -> dict[str, list[int]]:
@@ -36,23 +38,21 @@ def load_page_names() -> dict[str, list[int]]:
 
 
 def generate_html(entries: list[dict]) -> str:
-    """Generate static HTML with PDF.js viewer."""
+    """Generate static HTML with PNG image viewer."""
     entries_json = json.dumps(entries, ensure_ascii=False, indent=2)
 
     # Generate options HTML
     options_html = ""
     for i, entry in enumerate(entries):
         name = entry["name"]
-        pages_str = ", ".join(str(p) for p in entry["pages"])
-        options_html += f'            <option value="{i}" data-name="{name.lower()}">{name} ({pages_str})</option>\n'
+        options_html += f'            <option value="{i}" data-name="{name.lower()}">{name}</option>\n'
 
     html = f'''<!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Viewer</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
+    <title>Hướng dẫn hiệu chỉnh liều kháng sinh</title>
     <style>
         * {{
             margin: 0;
@@ -97,10 +97,10 @@ def generate_html(entries: list[dict]) -> str:
             background: #626669;
         }}
 
-        .page-select {{
+        .drug-select {{
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
-            min-width: 200px;
+            min-width: 250px;
             border: none;
             border-radius: 4px;
             background: #525659;
@@ -133,7 +133,7 @@ def generate_html(entries: list[dict]) -> str:
             cursor: not-allowed;
         }}
 
-        .page-info {{
+        .entry-info {{
             font-size: 0.85rem;
             color: #aaa;
             white-space: nowrap;
@@ -169,201 +169,175 @@ def generate_html(entries: list[dict]) -> str:
 
         .viewer {{
             flex: 1;
-            overflow-y: auto;
+            overflow: auto;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
             padding: 20px;
-            gap: 10px;
+            background: #525659;
         }}
 
-        .viewer canvas {{
+        .viewer img {{
+            max-width: 100%;
+            height: auto;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             background: white;
+            transform-origin: top center;
         }}
 
         .loading {{
             color: #aaa;
             font-size: 1.2rem;
             padding: 2rem;
+            text-align: center;
         }}
 
         .no-results {{
             color: #aaa;
             font-size: 1.2rem;
             padding: 2rem;
+            text-align: center;
+        }}
+
+        .error {{
+            color: #f88;
+            font-size: 1.2rem;
+            padding: 2rem;
+            text-align: center;
         }}
     </style>
 </head>
 <body>
     <div class="header">
-        <input type="text" class="search-input" id="search" placeholder="Search by name...">
-        <select class="page-select" id="pageSelect">
+        <input type="text" class="search-input" id="search" placeholder="Tìm kiếm thuốc...">
+        <select class="drug-select" id="drugSelect">
 {options_html}        </select>
         <div class="nav-buttons">
-            <button class="nav-btn" id="prevBtn" title="Previous">&larr; Prev</button>
-            <button class="nav-btn" id="nextBtn" title="Next">Next &rarr;</button>
+            <button class="nav-btn" id="prevBtn" title="Trước">&larr; Trước</button>
+            <button class="nav-btn" id="nextBtn" title="Sau">Sau &rarr;</button>
         </div>
         <div class="zoom-controls">
-            <button class="zoom-btn" id="zoomOut" title="Zoom out">-</button>
+            <button class="zoom-btn" id="zoomOut" title="Thu nhỏ">-</button>
             <span class="zoom-level" id="zoomLevel">100%</span>
-            <button class="zoom-btn" id="zoomIn" title="Zoom in">+</button>
-            <button class="zoom-btn" id="zoomFit" title="Fit width">Fit</button>
+            <button class="zoom-btn" id="zoomIn" title="Phóng to">+</button>
+            <button class="zoom-btn" id="zoomFit" title="Vừa màn hình">Fit</button>
         </div>
-        <span class="page-info" id="pageInfo"></span>
+        <span class="entry-info" id="entryInfo"></span>
     </div>
     <div class="viewer" id="viewerContainer">
-        <div class="loading">Loading PDF...</div>
+        <div class="loading">Đang tải...</div>
     </div>
 
-    <script type="module">
-        // Import PDF.js
-        const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
-
+    <script>
         const search = document.getElementById('search');
-        const pageSelect = document.getElementById('pageSelect');
+        const drugSelect = document.getElementById('drugSelect');
         const viewerContainer = document.getElementById('viewerContainer');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const pageInfo = document.getElementById('pageInfo');
-        const zoomIn = document.getElementById('zoomIn');
-        const zoomOut = document.getElementById('zoomOut');
-        const zoomFit = document.getElementById('zoomFit');
-        const zoomLevel = document.getElementById('zoomLevel');
+        const entryInfo = document.getElementById('entryInfo');
+        const zoomInBtn = document.getElementById('zoomIn');
+        const zoomOutBtn = document.getElementById('zoomOut');
+        const zoomFitBtn = document.getElementById('zoomFit');
+        const zoomLevelSpan = document.getElementById('zoomLevel');
 
         // Embedded entries data
         const allEntries = {entries_json};
 
         let currentEntries = [...allEntries];
-        let currentScale = 1.5;
-        let loadedPdfs = [];
+        let currentScale = 1.0;
+        let currentImage = null;
 
         function updateZoomDisplay() {{
-            zoomLevel.textContent = Math.round(currentScale * 100 / 1.5) + '%';
+            zoomLevelSpan.textContent = Math.round(currentScale * 100) + '%';
         }}
 
-        function updatePageInfo() {{
-            const currentIndex = pageSelect.selectedIndex;
-            const total = pageSelect.options.length;
+        function updateEntryInfo() {{
+            const currentIndex = drugSelect.selectedIndex;
+            const total = drugSelect.options.length;
             if (total > 0) {{
-                pageInfo.textContent = `Entry ${{currentIndex + 1}} of ${{total}}`;
+                entryInfo.textContent = `${{currentIndex + 1}} / ${{total}}`;
             }} else {{
-                pageInfo.textContent = '';
+                entryInfo.textContent = '';
             }}
             prevBtn.disabled = currentIndex <= 0;
             nextBtn.disabled = currentIndex >= total - 1;
         }}
 
-        async function renderPage(pdf, pageNum, container) {{
-            const page = await pdf.getPage(pageNum);
-            const viewport = page.getViewport({{ scale: currentScale }});
-
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-
-            await page.render({{
-                canvasContext: context,
-                viewport: viewport
-            }}).promise;
-
-            container.appendChild(canvas);
-        }}
-
-        async function loadAndRenderPdf(url, container) {{
-            try {{
-                const pdf = await pdfjsLib.getDocument(url).promise;
-                loadedPdfs.push(pdf);
-
-                // Render all pages of this PDF
-                for (let i = 1; i <= pdf.numPages; i++) {{
-                    await renderPage(pdf, i, container);
-                }}
-            }} catch (error) {{
-                console.error('Error loading PDF:', error);
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'no-results';
-                errorDiv.textContent = 'Error loading PDF';
-                container.appendChild(errorDiv);
+        function applyZoom() {{
+            if (currentImage) {{
+                currentImage.style.transform = `scale(${{currentScale}})`;
             }}
         }}
 
-        async function updateViewer() {{
-            const selectedIdx = pageSelect.selectedIndex;
+        function updateViewer() {{
+            const selectedIdx = drugSelect.selectedIndex;
             if (selectedIdx < 0 || currentEntries.length === 0) {{
-                viewerContainer.innerHTML = '<div class="no-results">No matching entries found</div>';
-                updatePageInfo();
+                viewerContainer.innerHTML = '<div class="no-results">Không tìm thấy kết quả</div>';
+                updateEntryInfo();
                 return;
             }}
 
-            viewerContainer.innerHTML = '<div class="loading">Loading PDF...</div>';
-            loadedPdfs = [];
+            viewerContainer.innerHTML = '<div class="loading">Đang tải...</div>';
 
             const entry = currentEntries[selectedIdx];
-            viewerContainer.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = 'drugs/' + entry.file;
+            img.alt = entry.name;
 
-            // Load and render each PDF file
-            for (const file of entry.files) {{
-                await loadAndRenderPdf('pages/' + file, viewerContainer);
-            }}
+            img.onload = function() {{
+                viewerContainer.innerHTML = '';
+                viewerContainer.appendChild(img);
+                currentImage = img;
+                applyZoom();
+            }};
 
-            updatePageInfo();
+            img.onerror = function() {{
+                viewerContainer.innerHTML = '<div class="error">Không thể tải hình ảnh: ' + entry.file + '</div>';
+                currentImage = null;
+            }};
+
+            updateEntryInfo();
         }}
 
-        async function rerender() {{
-            const selectedIdx = pageSelect.selectedIndex;
-            if (selectedIdx < 0 || currentEntries.length === 0) return;
-
-            viewerContainer.innerHTML = '';
-
-            for (const pdf of loadedPdfs) {{
-                for (let i = 1; i <= pdf.numPages; i++) {{
-                    await renderPage(pdf, i, viewerContainer);
-                }}
-            }}
-        }}
-
-        pageSelect.addEventListener('change', updateViewer);
+        drugSelect.addEventListener('change', () => {{
+            currentScale = 1.0;
+            updateZoomDisplay();
+            updateViewer();
+        }});
 
         prevBtn.addEventListener('click', () => {{
-            if (pageSelect.selectedIndex > 0) {{
-                pageSelect.selectedIndex--;
+            if (drugSelect.selectedIndex > 0) {{
+                drugSelect.selectedIndex--;
+                currentScale = 1.0;
+                updateZoomDisplay();
                 updateViewer();
             }}
         }});
 
         nextBtn.addEventListener('click', () => {{
-            if (pageSelect.selectedIndex < pageSelect.options.length - 1) {{
-                pageSelect.selectedIndex++;
+            if (drugSelect.selectedIndex < drugSelect.options.length - 1) {{
+                drugSelect.selectedIndex++;
+                currentScale = 1.0;
+                updateZoomDisplay();
                 updateViewer();
             }}
         }});
 
-        zoomIn.addEventListener('click', () => {{
+        zoomInBtn.addEventListener('click', () => {{
             currentScale = Math.min(currentScale + 0.25, 4);
             updateZoomDisplay();
-            rerender();
+            applyZoom();
         }});
 
-        zoomOut.addEventListener('click', () => {{
-            currentScale = Math.max(currentScale - 0.25, 0.5);
+        zoomOutBtn.addEventListener('click', () => {{
+            currentScale = Math.max(currentScale - 0.25, 0.25);
             updateZoomDisplay();
-            rerender();
+            applyZoom();
         }});
 
-        zoomFit.addEventListener('click', () => {{
-            // Calculate scale to fit container width
-            const containerWidth = viewerContainer.clientWidth - 40; // padding
-            if (loadedPdfs.length > 0) {{
-                loadedPdfs[0].getPage(1).then(page => {{
-                    const viewport = page.getViewport({{ scale: 1 }});
-                    currentScale = containerWidth / viewport.width;
-                    updateZoomDisplay();
-                    rerender();
-                }});
-            }}
+        zoomFitBtn.addEventListener('click', () => {{
+            currentScale = 1.0;
+            updateZoomDisplay();
+            applyZoom();
         }});
 
         // Debounce function for search
@@ -386,15 +360,17 @@ def generate_html(entries: list[dict]) -> str:
             currentEntries = allEntries.filter(entry => entry.name.toLowerCase().includes(query));
 
             // Rebuild select
-            pageSelect.innerHTML = '';
+            drugSelect.innerHTML = '';
             currentEntries.forEach((entry, idx) => {{
                 const option = document.createElement('option');
                 option.value = idx;
                 option.dataset.name = entry.name.toLowerCase();
-                option.textContent = `${{entry.name}} (${{entry.pages.join(', ')}})`;
-                pageSelect.appendChild(option);
+                option.textContent = entry.name;
+                drugSelect.appendChild(option);
             }});
 
+            currentScale = 1.0;
+            updateZoomDisplay();
             updateViewer();
         }}, 150);
 
@@ -409,9 +385,9 @@ def generate_html(entries: list[dict]) -> str:
             }} else if (e.key === 'ArrowRight') {{
                 nextBtn.click();
             }} else if (e.key === '+' || e.key === '=') {{
-                zoomIn.click();
+                zoomInBtn.click();
             }} else if (e.key === '-') {{
-                zoomOut.click();
+                zoomOutBtn.click();
             }}
         }});
 
@@ -429,24 +405,37 @@ def main() -> None:
     """Build the static site."""
     print("Building static site...")
 
-    # 1. Split PDF
-    print(f"Splitting {SOURCE_PDF}...")
-    page_count = split_pdf()
-    print(f"  Created {page_count} page PDFs in {PAGES_DIR}/")
+    # 1. Check drugs directory exists
+    if not DRUGS_DIR.exists():
+        print(f"Error: {DRUGS_DIR} does not exist.")
+        print("Run 'uv run python generate_drug_images.py' first to generate PNG images.")
+        return
 
-    # 2. Load page names (or generate defaults)
+    # 2. Load page names to get drug order and names
     names = load_page_names()
     if not names:
-        print("No page_names.json found, generating defaults...")
-        names = {f"Page {i}": [i] for i in range(1, page_count + 1)}
+        print("Error: No page_names.json found.")
+        return
 
-    # 3. Build entries list
-    entries = [
-        {"name": name, "pages": pages, "files": [f"page_{p}.pdf" for p in pages]}
-        for name, pages in names.items()
-    ]
-    entries.sort(key=lambda x: x["pages"][0])
-    print(f"  Loaded {len(entries)} entries from page_names.json")
+    # 3. Build entries list from page_names.json, matching to PNG files
+    png_files = get_available_drugs()
+    entries = []
+
+    for name, pages in names.items():
+        safe_name = sanitize_filename(name)
+        if safe_name in png_files:
+            entries.append({
+                "name": name,
+                "file": png_files[safe_name],
+            })
+        else:
+            print(f"  Warning: No PNG found for '{name}' (expected {safe_name}.png)")
+
+    # Sort by original page order
+    name_to_pages = {name: pages[0] for name, pages in names.items()}
+    entries.sort(key=lambda x: name_to_pages.get(x["name"], 999))
+
+    print(f"  Found {len(entries)} drug images in {DRUGS_DIR}/")
 
     # 4. Generate index.html
     html = generate_html(entries)

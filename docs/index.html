@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Viewer</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
+    <title>Hướng dẫn hiệu chỉnh liều kháng sinh</title>
     <style>
         * {
             margin: 0;
@@ -49,10 +48,10 @@
             background: #626669;
         }
 
-        .page-select {
+        .drug-select {
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
-            min-width: 200px;
+            min-width: 250px;
             border: none;
             border-radius: 4px;
             background: #525659;
@@ -85,7 +84,7 @@
             cursor: not-allowed;
         }
 
-        .page-info {
+        .entry-info {
             font-size: 0.85rem;
             color: #aaa;
             white-space: nowrap;
@@ -121,756 +120,426 @@
 
         .viewer {
             flex: 1;
-            overflow-y: auto;
+            overflow: auto;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
             padding: 20px;
-            gap: 10px;
+            background: #525659;
         }
 
-        .viewer canvas {
+        .viewer img {
+            max-width: 100%;
+            height: auto;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             background: white;
+            transform-origin: top center;
         }
 
         .loading {
             color: #aaa;
             font-size: 1.2rem;
             padding: 2rem;
+            text-align: center;
         }
 
         .no-results {
             color: #aaa;
             font-size: 1.2rem;
             padding: 2rem;
+            text-align: center;
+        }
+
+        .error {
+            color: #f88;
+            font-size: 1.2rem;
+            padding: 2rem;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <input type="text" class="search-input" id="search" placeholder="Search by name...">
-        <select class="page-select" id="pageSelect">
-            <option value="0" data-name="acyclovir">Acyclovir (1, 2)</option>
-            <option value="1" data-name="amikacin">Amikacin (2)</option>
-            <option value="2" data-name="amoxicillin">Amoxicillin (3)</option>
-            <option value="3" data-name="acid clavulanic">Acid clavulanic (3)</option>
-            <option value="4" data-name="sulbactam">Sulbactam (3, 4)</option>
-            <option value="5" data-name="anidulafungin">Anidulafungin (4)</option>
-            <option value="6" data-name="azithromycin">Azithromycin (4)</option>
-            <option value="7" data-name="caspofungin">Caspofungin (4)</option>
-            <option value="8" data-name="cefaclor">Cefaclor (4)</option>
-            <option value="9" data-name="cefalexin">Cefalexin (4)</option>
-            <option value="10" data-name="cefamandol">Cefamandol (5)</option>
-            <option value="11" data-name="cefazolin">Cefazolin (5)</option>
-            <option value="12" data-name="cefdinir">Cefdinir (5)</option>
-            <option value="13" data-name="cefepim">Cefepim (6)</option>
-            <option value="14" data-name="cefixim">Cefixim (6)</option>
-            <option value="15" data-name="cefoperazon">Cefoperazon (6)</option>
-            <option value="16" data-name="cefoperazon + sulbactam">Cefoperazon + sulbactam (7)</option>
-            <option value="17" data-name="cefotaxim">Cefotaxim (7)</option>
-            <option value="18" data-name="cefotiam">Cefotiam (7)</option>
-            <option value="19" data-name="cefpirom">Cefpirom (7, 8)</option>
-            <option value="20" data-name="ceftazidim">Ceftazidim (8)</option>
-            <option value="21" data-name="ceftazidim + avibactam">Ceftazidim + avibactam (8)</option>
-            <option value="22" data-name="ceftibuten">Ceftibuten (9)</option>
-            <option value="23" data-name="ceftizoxim">Ceftizoxim (9)</option>
-            <option value="24" data-name="ceftolozan + tazobactam">Ceftolozan + tazobactam (9)</option>
-            <option value="25" data-name="ceftriaxon">Ceftriaxon (9, 10)</option>
-            <option value="26" data-name="cefuroxim">Cefuroxim (10)</option>
-            <option value="27" data-name="cefalexin (2)">Cefalexin (2) (10)</option>
-            <option value="28" data-name="ciprofloxacin">Ciprofloxacin (11)</option>
-            <option value="29" data-name="clarithromycin">Clarithromycin (11)</option>
-            <option value="30" data-name="clindamycin">Clindamycin (11)</option>
-            <option value="31" data-name="doripenem">Doripenem (12)</option>
-            <option value="32" data-name="doxycyclin">Doxycyclin (12)</option>
-            <option value="33" data-name="ertapenem">Ertapenem (12)</option>
-            <option value="34" data-name="fluconazol">Fluconazol (13)</option>
-            <option value="35" data-name="fosfomycin">Fosfomycin (13, 14)</option>
-            <option value="36" data-name="gentamicin">Gentamicin (14, 15)</option>
-            <option value="37" data-name="imipenem + cilastatin">Imipenem + cilastatin (15)</option>
-            <option value="38" data-name="itraconazol">Itraconazol (16)</option>
-            <option value="39" data-name="levofloxacin">Levofloxacin (16)</option>
-            <option value="40" data-name="linezolid">Linezolid (17)</option>
-            <option value="41" data-name="meropenem">Meropenem (17)</option>
-            <option value="42" data-name="metronidazol">Metronidazol (17)</option>
-            <option value="43" data-name="moxifloxacin">Moxifloxacin (17)</option>
-            <option value="44" data-name="ofloxacin">Ofloxacin (18)</option>
-            <option value="45" data-name="piperacilin + tazobactam">Piperacilin + tazobactam (18)</option>
-            <option value="46" data-name="co-trimoxazol">Co-trimoxazol (19)</option>
-            <option value="47" data-name="ticarcilin + acid clavulanic">Ticarcilin + acid clavulanic (19)</option>
-            <option value="48" data-name="tinidazol">Tinidazol (20)</option>
-            <option value="49" data-name="tobramycin">Tobramycin (20)</option>
-            <option value="50" data-name="vancomycin">Vancomycin (21)</option>
-            <option value="51" data-name="voriconazol">Voriconazol (22)</option>
-            <option value="52" data-name="colistin">Colistin (23, 24)</option>
-            <option value="53" data-name="danh mục từ viết tắt">Danh mục từ viết tắt (25)</option>
+        <input type="text" class="search-input" id="search" placeholder="Tìm kiếm thuốc...">
+        <select class="drug-select" id="drugSelect">
+            <option value="0" data-name="acyclovir">Acyclovir</option>
+            <option value="1" data-name="amikacin">Amikacin</option>
+            <option value="2" data-name="amoxicillin">Amoxicillin</option>
+            <option value="3" data-name="anidulafungin">Anidulafungin</option>
+            <option value="4" data-name="azithromycin">Azithromycin</option>
+            <option value="5" data-name="caspofungin">Caspofungin</option>
+            <option value="6" data-name="cefaclor">Cefaclor</option>
+            <option value="7" data-name="cefalexin">Cefalexin</option>
+            <option value="8" data-name="cefamandol">Cefamandol</option>
+            <option value="9" data-name="cefazolin">Cefazolin</option>
+            <option value="10" data-name="cefdinir">Cefdinir</option>
+            <option value="11" data-name="cefepim">Cefepim</option>
+            <option value="12" data-name="cefixim">Cefixim</option>
+            <option value="13" data-name="cefoperazon">Cefoperazon</option>
+            <option value="14" data-name="cefoperazon + sulbactam">Cefoperazon + sulbactam</option>
+            <option value="15" data-name="cefotaxim">Cefotaxim</option>
+            <option value="16" data-name="cefotiam">Cefotiam</option>
+            <option value="17" data-name="cefpirom">Cefpirom</option>
+            <option value="18" data-name="ceftazidim">Ceftazidim</option>
+            <option value="19" data-name="ceftazidim + avibactam">Ceftazidim + avibactam</option>
+            <option value="20" data-name="ceftibuten">Ceftibuten</option>
+            <option value="21" data-name="ceftizoxim">Ceftizoxim</option>
+            <option value="22" data-name="ceftolozan + tazobactam">Ceftolozan + tazobactam</option>
+            <option value="23" data-name="ceftriaxon">Ceftriaxon</option>
+            <option value="24" data-name="cefuroxim">Cefuroxim</option>
+            <option value="25" data-name="ciprofloxacin">Ciprofloxacin</option>
+            <option value="26" data-name="clarithromycin">Clarithromycin</option>
+            <option value="27" data-name="clindamycin">Clindamycin</option>
+            <option value="28" data-name="doripenem">Doripenem</option>
+            <option value="29" data-name="doxycyclin">Doxycyclin</option>
+            <option value="30" data-name="ertapenem">Ertapenem</option>
+            <option value="31" data-name="fluconazol">Fluconazol</option>
+            <option value="32" data-name="fosfomycin">Fosfomycin</option>
+            <option value="33" data-name="gentamicin">Gentamicin</option>
+            <option value="34" data-name="imipenem + cilastatin">Imipenem + cilastatin</option>
+            <option value="35" data-name="itraconazol">Itraconazol</option>
+            <option value="36" data-name="levofloxacin">Levofloxacin</option>
+            <option value="37" data-name="linezolid">Linezolid</option>
+            <option value="38" data-name="meropenem">Meropenem</option>
+            <option value="39" data-name="metronidazol">Metronidazol</option>
+            <option value="40" data-name="moxifloxacin">Moxifloxacin</option>
+            <option value="41" data-name="ofloxacin">Ofloxacin</option>
+            <option value="42" data-name="piperacilin + tazobactam">Piperacilin + tazobactam</option>
+            <option value="43" data-name="co-trimoxazol">Co-trimoxazol</option>
+            <option value="44" data-name="ticarcilin + acid clavulanic">Ticarcilin + acid clavulanic</option>
+            <option value="45" data-name="tinidazol">Tinidazol</option>
+            <option value="46" data-name="tobramycin">Tobramycin</option>
+            <option value="47" data-name="vancomycin">Vancomycin</option>
+            <option value="48" data-name="voriconazol">Voriconazol</option>
+            <option value="49" data-name="colistin">Colistin</option>
         </select>
         <div class="nav-buttons">
-            <button class="nav-btn" id="prevBtn" title="Previous">&larr; Prev</button>
-            <button class="nav-btn" id="nextBtn" title="Next">Next &rarr;</button>
+            <button class="nav-btn" id="prevBtn" title="Trước">&larr; Trước</button>
+            <button class="nav-btn" id="nextBtn" title="Sau">Sau &rarr;</button>
         </div>
         <div class="zoom-controls">
-            <button class="zoom-btn" id="zoomOut" title="Zoom out">-</button>
+            <button class="zoom-btn" id="zoomOut" title="Thu nhỏ">-</button>
             <span class="zoom-level" id="zoomLevel">100%</span>
-            <button class="zoom-btn" id="zoomIn" title="Zoom in">+</button>
-            <button class="zoom-btn" id="zoomFit" title="Fit width">Fit</button>
+            <button class="zoom-btn" id="zoomIn" title="Phóng to">+</button>
+            <button class="zoom-btn" id="zoomFit" title="Vừa màn hình">Fit</button>
         </div>
-        <span class="page-info" id="pageInfo"></span>
+        <span class="entry-info" id="entryInfo"></span>
     </div>
     <div class="viewer" id="viewerContainer">
-        <div class="loading">Loading PDF...</div>
+        <div class="loading">Đang tải...</div>
     </div>
 
-    <script type="module">
-        // Import PDF.js
-        const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs');
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
-
+    <script>
         const search = document.getElementById('search');
-        const pageSelect = document.getElementById('pageSelect');
+        const drugSelect = document.getElementById('drugSelect');
         const viewerContainer = document.getElementById('viewerContainer');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const pageInfo = document.getElementById('pageInfo');
-        const zoomIn = document.getElementById('zoomIn');
-        const zoomOut = document.getElementById('zoomOut');
-        const zoomFit = document.getElementById('zoomFit');
-        const zoomLevel = document.getElementById('zoomLevel');
+        const entryInfo = document.getElementById('entryInfo');
+        const zoomInBtn = document.getElementById('zoomIn');
+        const zoomOutBtn = document.getElementById('zoomOut');
+        const zoomFitBtn = document.getElementById('zoomFit');
+        const zoomLevelSpan = document.getElementById('zoomLevel');
 
         // Embedded entries data
         const allEntries = [
   {
     "name": "Acyclovir",
-    "pages": [
-      1,
-      2
-    ],
-    "files": [
-      "page_1.pdf",
-      "page_2.pdf"
-    ]
+    "file": "Acyclovir.png"
   },
   {
     "name": "Amikacin",
-    "pages": [
-      2
-    ],
-    "files": [
-      "page_2.pdf"
-    ]
+    "file": "Amikacin.png"
   },
   {
     "name": "Amoxicillin",
-    "pages": [
-      3
-    ],
-    "files": [
-      "page_3.pdf"
-    ]
-  },
-  {
-    "name": "Acid clavulanic",
-    "pages": [
-      3
-    ],
-    "files": [
-      "page_3.pdf"
-    ]
-  },
-  {
-    "name": "Sulbactam",
-    "pages": [
-      3,
-      4
-    ],
-    "files": [
-      "page_3.pdf",
-      "page_4.pdf"
-    ]
+    "file": "Amoxicillin.png"
   },
   {
     "name": "Anidulafungin",
-    "pages": [
-      4
-    ],
-    "files": [
-      "page_4.pdf"
-    ]
+    "file": "Anidulafungin.png"
   },
   {
     "name": "Azithromycin",
-    "pages": [
-      4
-    ],
-    "files": [
-      "page_4.pdf"
-    ]
+    "file": "Azithromycin.png"
   },
   {
     "name": "Caspofungin",
-    "pages": [
-      4
-    ],
-    "files": [
-      "page_4.pdf"
-    ]
+    "file": "Caspofungin.png"
   },
   {
     "name": "Cefaclor",
-    "pages": [
-      4
-    ],
-    "files": [
-      "page_4.pdf"
-    ]
+    "file": "Cefaclor.png"
   },
   {
     "name": "Cefalexin",
-    "pages": [
-      4
-    ],
-    "files": [
-      "page_4.pdf"
-    ]
+    "file": "Cefalexin.png"
   },
   {
     "name": "Cefamandol",
-    "pages": [
-      5
-    ],
-    "files": [
-      "page_5.pdf"
-    ]
+    "file": "Cefamandol.png"
   },
   {
     "name": "Cefazolin",
-    "pages": [
-      5
-    ],
-    "files": [
-      "page_5.pdf"
-    ]
+    "file": "Cefazolin.png"
   },
   {
     "name": "Cefdinir",
-    "pages": [
-      5
-    ],
-    "files": [
-      "page_5.pdf"
-    ]
+    "file": "Cefdinir.png"
   },
   {
     "name": "Cefepim",
-    "pages": [
-      6
-    ],
-    "files": [
-      "page_6.pdf"
-    ]
+    "file": "Cefepim.png"
   },
   {
     "name": "Cefixim",
-    "pages": [
-      6
-    ],
-    "files": [
-      "page_6.pdf"
-    ]
+    "file": "Cefixim.png"
   },
   {
     "name": "Cefoperazon",
-    "pages": [
-      6
-    ],
-    "files": [
-      "page_6.pdf"
-    ]
+    "file": "Cefoperazon.png"
   },
   {
     "name": "Cefoperazon + sulbactam",
-    "pages": [
-      7
-    ],
-    "files": [
-      "page_7.pdf"
-    ]
+    "file": "Cefoperazon_+_sulbactam.png"
   },
   {
     "name": "Cefotaxim",
-    "pages": [
-      7
-    ],
-    "files": [
-      "page_7.pdf"
-    ]
+    "file": "Cefotaxim.png"
   },
   {
     "name": "Cefotiam",
-    "pages": [
-      7
-    ],
-    "files": [
-      "page_7.pdf"
-    ]
+    "file": "Cefotiam.png"
   },
   {
     "name": "Cefpirom",
-    "pages": [
-      7,
-      8
-    ],
-    "files": [
-      "page_7.pdf",
-      "page_8.pdf"
-    ]
+    "file": "Cefpirom.png"
   },
   {
     "name": "Ceftazidim",
-    "pages": [
-      8
-    ],
-    "files": [
-      "page_8.pdf"
-    ]
+    "file": "Ceftazidim.png"
   },
   {
     "name": "Ceftazidim + avibactam",
-    "pages": [
-      8
-    ],
-    "files": [
-      "page_8.pdf"
-    ]
+    "file": "Ceftazidim_+_avibactam.png"
   },
   {
     "name": "Ceftibuten",
-    "pages": [
-      9
-    ],
-    "files": [
-      "page_9.pdf"
-    ]
+    "file": "Ceftibuten.png"
   },
   {
     "name": "Ceftizoxim",
-    "pages": [
-      9
-    ],
-    "files": [
-      "page_9.pdf"
-    ]
+    "file": "Ceftizoxim.png"
   },
   {
     "name": "Ceftolozan + tazobactam",
-    "pages": [
-      9
-    ],
-    "files": [
-      "page_9.pdf"
-    ]
+    "file": "Ceftolozan_+_tazobactam.png"
   },
   {
     "name": "Ceftriaxon",
-    "pages": [
-      9,
-      10
-    ],
-    "files": [
-      "page_9.pdf",
-      "page_10.pdf"
-    ]
+    "file": "Ceftriaxon.png"
   },
   {
     "name": "Cefuroxim",
-    "pages": [
-      10
-    ],
-    "files": [
-      "page_10.pdf"
-    ]
-  },
-  {
-    "name": "Cefalexin (2)",
-    "pages": [
-      10
-    ],
-    "files": [
-      "page_10.pdf"
-    ]
+    "file": "Cefuroxim.png"
   },
   {
     "name": "Ciprofloxacin",
-    "pages": [
-      11
-    ],
-    "files": [
-      "page_11.pdf"
-    ]
+    "file": "Ciprofloxacin.png"
   },
   {
     "name": "Clarithromycin",
-    "pages": [
-      11
-    ],
-    "files": [
-      "page_11.pdf"
-    ]
+    "file": "Clarithromycin.png"
   },
   {
     "name": "Clindamycin",
-    "pages": [
-      11
-    ],
-    "files": [
-      "page_11.pdf"
-    ]
+    "file": "Clindamycin.png"
   },
   {
     "name": "Doripenem",
-    "pages": [
-      12
-    ],
-    "files": [
-      "page_12.pdf"
-    ]
+    "file": "Doripenem.png"
   },
   {
     "name": "Doxycyclin",
-    "pages": [
-      12
-    ],
-    "files": [
-      "page_12.pdf"
-    ]
+    "file": "Doxycyclin.png"
   },
   {
     "name": "Ertapenem",
-    "pages": [
-      12
-    ],
-    "files": [
-      "page_12.pdf"
-    ]
+    "file": "Ertapenem.png"
   },
   {
     "name": "Fluconazol",
-    "pages": [
-      13
-    ],
-    "files": [
-      "page_13.pdf"
-    ]
+    "file": "Fluconazol.png"
   },
   {
     "name": "Fosfomycin",
-    "pages": [
-      13,
-      14
-    ],
-    "files": [
-      "page_13.pdf",
-      "page_14.pdf"
-    ]
+    "file": "Fosfomycin.png"
   },
   {
     "name": "Gentamicin",
-    "pages": [
-      14,
-      15
-    ],
-    "files": [
-      "page_14.pdf",
-      "page_15.pdf"
-    ]
+    "file": "Gentamicin.png"
   },
   {
     "name": "Imipenem + cilastatin",
-    "pages": [
-      15
-    ],
-    "files": [
-      "page_15.pdf"
-    ]
+    "file": "Imipenem_+_cilastatin.png"
   },
   {
     "name": "Itraconazol",
-    "pages": [
-      16
-    ],
-    "files": [
-      "page_16.pdf"
-    ]
+    "file": "Itraconazol.png"
   },
   {
     "name": "Levofloxacin",
-    "pages": [
-      16
-    ],
-    "files": [
-      "page_16.pdf"
-    ]
+    "file": "Levofloxacin.png"
   },
   {
     "name": "Linezolid",
-    "pages": [
-      17
-    ],
-    "files": [
-      "page_17.pdf"
-    ]
+    "file": "Linezolid.png"
   },
   {
     "name": "Meropenem",
-    "pages": [
-      17
-    ],
-    "files": [
-      "page_17.pdf"
-    ]
+    "file": "Meropenem.png"
   },
   {
     "name": "Metronidazol",
-    "pages": [
-      17
-    ],
-    "files": [
-      "page_17.pdf"
-    ]
+    "file": "Metronidazol.png"
   },
   {
     "name": "Moxifloxacin",
-    "pages": [
-      17
-    ],
-    "files": [
-      "page_17.pdf"
-    ]
+    "file": "Moxifloxacin.png"
   },
   {
     "name": "Ofloxacin",
-    "pages": [
-      18
-    ],
-    "files": [
-      "page_18.pdf"
-    ]
+    "file": "Ofloxacin.png"
   },
   {
     "name": "Piperacilin + tazobactam",
-    "pages": [
-      18
-    ],
-    "files": [
-      "page_18.pdf"
-    ]
+    "file": "Piperacilin_+_tazobactam.png"
   },
   {
     "name": "Co-trimoxazol",
-    "pages": [
-      19
-    ],
-    "files": [
-      "page_19.pdf"
-    ]
+    "file": "Co-trimoxazol.png"
   },
   {
     "name": "Ticarcilin + acid clavulanic",
-    "pages": [
-      19
-    ],
-    "files": [
-      "page_19.pdf"
-    ]
+    "file": "Ticarcilin_+_acid_clavulanic.png"
   },
   {
     "name": "Tinidazol",
-    "pages": [
-      20
-    ],
-    "files": [
-      "page_20.pdf"
-    ]
+    "file": "Tinidazol.png"
   },
   {
     "name": "Tobramycin",
-    "pages": [
-      20
-    ],
-    "files": [
-      "page_20.pdf"
-    ]
+    "file": "Tobramycin.png"
   },
   {
     "name": "Vancomycin",
-    "pages": [
-      21
-    ],
-    "files": [
-      "page_21.pdf"
-    ]
+    "file": "Vancomycin.png"
   },
   {
     "name": "Voriconazol",
-    "pages": [
-      22
-    ],
-    "files": [
-      "page_22.pdf"
-    ]
+    "file": "Voriconazol.png"
   },
   {
     "name": "Colistin",
-    "pages": [
-      23,
-      24
-    ],
-    "files": [
-      "page_23.pdf",
-      "page_24.pdf"
-    ]
-  },
-  {
-    "name": "Danh mục từ viết tắt",
-    "pages": [
-      25
-    ],
-    "files": [
-      "page_25.pdf"
-    ]
+    "file": "Colistin.png"
   }
 ];
 
         let currentEntries = [...allEntries];
-        let currentScale = 1.5;
-        let loadedPdfs = [];
+        let currentScale = 1.0;
+        let currentImage = null;
 
         function updateZoomDisplay() {
-            zoomLevel.textContent = Math.round(currentScale * 100 / 1.5) + '%';
+            zoomLevelSpan.textContent = Math.round(currentScale * 100) + '%';
         }
 
-        function updatePageInfo() {
-            const currentIndex = pageSelect.selectedIndex;
-            const total = pageSelect.options.length;
+        function updateEntryInfo() {
+            const currentIndex = drugSelect.selectedIndex;
+            const total = drugSelect.options.length;
             if (total > 0) {
-                pageInfo.textContent = `Entry ${currentIndex + 1} of ${total}`;
+                entryInfo.textContent = `${currentIndex + 1} / ${total}`;
             } else {
-                pageInfo.textContent = '';
+                entryInfo.textContent = '';
             }
             prevBtn.disabled = currentIndex <= 0;
             nextBtn.disabled = currentIndex >= total - 1;
         }
 
-        async function renderPage(pdf, pageNum, container) {
-            const page = await pdf.getPage(pageNum);
-            const viewport = page.getViewport({ scale: currentScale });
-
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-
-            await page.render({
-                canvasContext: context,
-                viewport: viewport
-            }).promise;
-
-            container.appendChild(canvas);
-        }
-
-        async function loadAndRenderPdf(url, container) {
-            try {
-                const pdf = await pdfjsLib.getDocument(url).promise;
-                loadedPdfs.push(pdf);
-
-                // Render all pages of this PDF
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    await renderPage(pdf, i, container);
-                }
-            } catch (error) {
-                console.error('Error loading PDF:', error);
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'no-results';
-                errorDiv.textContent = 'Error loading PDF';
-                container.appendChild(errorDiv);
+        function applyZoom() {
+            if (currentImage) {
+                currentImage.style.transform = `scale(${currentScale})`;
             }
         }
 
-        async function updateViewer() {
-            const selectedIdx = pageSelect.selectedIndex;
+        function updateViewer() {
+            const selectedIdx = drugSelect.selectedIndex;
             if (selectedIdx < 0 || currentEntries.length === 0) {
-                viewerContainer.innerHTML = '<div class="no-results">No matching entries found</div>';
-                updatePageInfo();
+                viewerContainer.innerHTML = '<div class="no-results">Không tìm thấy kết quả</div>';
+                updateEntryInfo();
                 return;
             }
 
-            viewerContainer.innerHTML = '<div class="loading">Loading PDF...</div>';
-            loadedPdfs = [];
+            viewerContainer.innerHTML = '<div class="loading">Đang tải...</div>';
 
             const entry = currentEntries[selectedIdx];
-            viewerContainer.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = 'drugs/' + entry.file;
+            img.alt = entry.name;
 
-            // Load and render each PDF file
-            for (const file of entry.files) {
-                await loadAndRenderPdf('pages/' + file, viewerContainer);
-            }
+            img.onload = function() {
+                viewerContainer.innerHTML = '';
+                viewerContainer.appendChild(img);
+                currentImage = img;
+                applyZoom();
+            };
 
-            updatePageInfo();
+            img.onerror = function() {
+                viewerContainer.innerHTML = '<div class="error">Không thể tải hình ảnh: ' + entry.file + '</div>';
+                currentImage = null;
+            };
+
+            updateEntryInfo();
         }
 
-        async function rerender() {
-            const selectedIdx = pageSelect.selectedIndex;
-            if (selectedIdx < 0 || currentEntries.length === 0) return;
-
-            viewerContainer.innerHTML = '';
-
-            for (const pdf of loadedPdfs) {
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    await renderPage(pdf, i, viewerContainer);
-                }
-            }
-        }
-
-        pageSelect.addEventListener('change', updateViewer);
+        drugSelect.addEventListener('change', () => {
+            currentScale = 1.0;
+            updateZoomDisplay();
+            updateViewer();
+        });
 
         prevBtn.addEventListener('click', () => {
-            if (pageSelect.selectedIndex > 0) {
-                pageSelect.selectedIndex--;
+            if (drugSelect.selectedIndex > 0) {
+                drugSelect.selectedIndex--;
+                currentScale = 1.0;
+                updateZoomDisplay();
                 updateViewer();
             }
         });
 
         nextBtn.addEventListener('click', () => {
-            if (pageSelect.selectedIndex < pageSelect.options.length - 1) {
-                pageSelect.selectedIndex++;
+            if (drugSelect.selectedIndex < drugSelect.options.length - 1) {
+                drugSelect.selectedIndex++;
+                currentScale = 1.0;
+                updateZoomDisplay();
                 updateViewer();
             }
         });
 
-        zoomIn.addEventListener('click', () => {
+        zoomInBtn.addEventListener('click', () => {
             currentScale = Math.min(currentScale + 0.25, 4);
             updateZoomDisplay();
-            rerender();
+            applyZoom();
         });
 
-        zoomOut.addEventListener('click', () => {
-            currentScale = Math.max(currentScale - 0.25, 0.5);
+        zoomOutBtn.addEventListener('click', () => {
+            currentScale = Math.max(currentScale - 0.25, 0.25);
             updateZoomDisplay();
-            rerender();
+            applyZoom();
         });
 
-        zoomFit.addEventListener('click', () => {
-            // Calculate scale to fit container width
-            const containerWidth = viewerContainer.clientWidth - 40; // padding
-            if (loadedPdfs.length > 0) {
-                loadedPdfs[0].getPage(1).then(page => {
-                    const viewport = page.getViewport({ scale: 1 });
-                    currentScale = containerWidth / viewport.width;
-                    updateZoomDisplay();
-                    rerender();
-                });
-            }
+        zoomFitBtn.addEventListener('click', () => {
+            currentScale = 1.0;
+            updateZoomDisplay();
+            applyZoom();
         });
 
         // Debounce function for search
@@ -893,15 +562,17 @@
             currentEntries = allEntries.filter(entry => entry.name.toLowerCase().includes(query));
 
             // Rebuild select
-            pageSelect.innerHTML = '';
+            drugSelect.innerHTML = '';
             currentEntries.forEach((entry, idx) => {
                 const option = document.createElement('option');
                 option.value = idx;
                 option.dataset.name = entry.name.toLowerCase();
-                option.textContent = `${entry.name} (${entry.pages.join(', ')})`;
-                pageSelect.appendChild(option);
+                option.textContent = entry.name;
+                drugSelect.appendChild(option);
             });
 
+            currentScale = 1.0;
+            updateZoomDisplay();
             updateViewer();
         }, 150);
 
@@ -916,9 +587,9 @@
             } else if (e.key === 'ArrowRight') {
                 nextBtn.click();
             } else if (e.key === '+' || e.key === '=') {
-                zoomIn.click();
+                zoomInBtn.click();
             } else if (e.key === '-') {
-                zoomOut.click();
+                zoomOutBtn.click();
             }
         });
 
