@@ -1,0 +1,9 @@
+[project]
+name = "bvdhna-thuoc"
+version = "0.1.0"
+description = "Static PDF viewer for GitHub Pages"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pypdf",
+]
