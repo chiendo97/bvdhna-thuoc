@@ -52,7 +52,10 @@ def generate_html(entries: list[dict]) -> str:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hướng dẫn hiệu chỉnh liều kháng sinh</title>
+    <title>Hướng dẫn hiệu chỉnh liều trên BN suy thận 2026 - BVĐK Nghệ An</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo.png">
     <style>
         * {{
             margin: 0;
@@ -69,13 +72,27 @@ def generate_html(entries: list[dict]) -> str:
         }}
 
         .header {{
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 1rem;
             background: #2e7d32;
             display: flex;
             gap: 0.75rem;
             align-items: center;
             flex-wrap: wrap;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }}
+
+        .logo {{
+            height: 40px;
+            width: auto;
+            background: white;
+            border-radius: 4px;
+            padding: 2px;
+        }}
+
+        .site-title {{
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
         }}
 
         .search-input {{
@@ -173,6 +190,14 @@ def generate_html(entries: list[dict]) -> str:
                 gap: 0.5rem;
             }}
 
+            .logo {{
+                height: 32px;
+            }}
+
+            .site-title {{
+                font-size: 0.85rem;
+            }}
+
             .search-input {{
                 min-width: 120px;
                 font-size: 0.85rem;
@@ -198,7 +223,16 @@ def generate_html(entries: list[dict]) -> str:
         @media (max-width: 480px) {{
             .header {{
                 flex-direction: column;
-                align-items: stretch;
+                align-items: center;
+            }}
+
+            .logo {{
+                height: 36px;
+            }}
+
+            .site-title {{
+                font-size: 0.9rem;
+                text-align: center;
             }}
 
             .search-input, .drug-select {{
@@ -218,6 +252,8 @@ def generate_html(entries: list[dict]) -> str:
 </head>
 <body>
     <div class="header">
+        <img src="logo.png" alt="BVĐK Nghệ An" class="logo">
+        <span class="site-title">Hướng dẫn hiệu chỉnh liều trên BN suy thận 2026</span>
         <input type="text" class="search-input" id="search" placeholder="Tìm kiếm thuốc...">
         <select class="drug-select" id="drugSelect">
 {options_html}        </select>

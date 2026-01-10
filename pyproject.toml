@@ -9,4 +9,5 @@ dependencies = [
     "pymupdf",
     "python-docx",
     "playwright",
+    "pillow>=12.1.0",
 ]
