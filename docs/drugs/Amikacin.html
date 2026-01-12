@@ -70,6 +70,25 @@
             margin-bottom: 0;
         }
 
+        /* Math fraction styling */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+            font-size: 0.85em;
+        }
+
+        .frac-num {
+            border-bottom: 1px solid #333;
+            padding: 0 4px 2px 4px;
+        }
+
+        .frac-den {
+            padding: 2px 4px 0 4px;
+        }
+
         /* Nested tables for ClCr dosing */
         .nested-table {
             width: 100%;
@@ -144,11 +163,11 @@
     
         <div class="info-section">
             <div class="section-header">Dược thư Quốc gia  Việt Nam 2022</div>
-            <div class="section-content"><p><strong>Cách 1:</strong> Giữ nguyên liều thông thường, kéo dài khoảng cách đưa liều.</p><p>Dùng liều 7,5mg/kg/lần, khoảng đưa liều được tính bằng SCr (mg/100ml) nhân với 9.</p><table class="nested-table"><tr><td>SCr (mg/100ml)</td><td>Khoảng cách đưa liều (h)</td></tr><tr><td>1,5</td><td>13,5</td></tr><tr><td>2,0</td><td>18,0</td></tr><tr><td>2,5</td><td>22,5</td></tr><tr><td>3,0</td><td>27,0</td></tr><tr><td>3,5</td><td>31,5</td></tr><tr><td>4,0</td><td>36,0</td></tr><tr><td>4,5</td><td>40,5</td></tr><tr><td>5,0</td><td>45,0</td></tr></table><p><strong>Cách 2:</strong> Giảm liều và giữ nguyên khoảng cách đưa liều (12h).</p><p>LD: 7,5mg/kg</p><p>MD =  x LD</p><p>dùng mỗi 12h.</p></div>
+            <div class="section-content"><p><strong>Cách 1:</strong> Giữ nguyên liều thông thường, kéo dài khoảng cách đưa liều.</p><p>Dùng liều 7,5mg/kg/lần, khoảng đưa liều được tính bằng SCr (mg/100ml) nhân với 9.</p><table class="nested-table"><tr><td>SCr (mg/100ml)</td><td>Khoảng cách đưa liều (h)</td></tr><tr><td>1,5</td><td>13,5</td></tr><tr><td>2,0</td><td>18,0</td></tr><tr><td>2,5</td><td>22,5</td></tr><tr><td>3,0</td><td>27,0</td></tr><tr><td>3,5</td><td>31,5</td></tr><tr><td>4,0</td><td>36,0</td></tr><tr><td>4,5</td><td>40,5</td></tr><tr><td>5,0</td><td>45,0</td></tr></table><p><strong>Cách 2:</strong> Giảm liều và giữ nguyên khoảng cách đưa liều (12h).</p><p>LD: 7,5mg/kg</p><p>MD = <span class="fraction"><span class="frac-num">ClCr BN suy thận</span><span class="frac-den">ClCr bình thường</span></span> x LD</p><p>dùng mỗi 12h.</p></div>
         </div>
         <div class="info-section">
             <div class="section-header">Sanford guide  (update 12.2025)</div>
-            <div class="section-content"><p><strong>Gram (-)</strong><strong>:</strong></p><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng</td></tr><tr><td>&gt; 50</td><td>7,5mg/kg/12h</td></tr><tr><td>10 - 50</td><td>7,5mg/ kg/24h</td></tr><tr><td>&lt; 10</td><td>7,5mg/kg/48h</td></tr><tr><td>HD</td><td>7,5mg/kg/48h + 3,75mg/kg sau lọc</td></tr></table><p><strong>NTM</strong> (Nontuberculous Mycobacteria):</p><p>TDM để hiệu chỉnh liều, với mục tiêu:</p><table class="nested-table"><tr><td>Đỉnh<br>(μg/ml)</td><td>Đáy<br>(μg/ml)</td></tr><tr><td>35-45 (15mg/kg)<br>65-80 (25mg/kg)</td><td>&lt; 1</td></tr></table><p>- CRRT: 25mg/kg/48h truyền kéo dài. Khuyến cáo TDM.</p><p>- CAPD (chỉ cho viêm phúc mạc): 2mg/kg/24h, IP.</p></div>
+            <div class="section-content"><p><strong>Gram (-)</strong><strong>:</strong></p><table class="nested-table"><tr><td>ClCr (ml/ph)</td><td>Liều dùng</td></tr><tr><td>&gt; 50</td><td>7,5mg/kg/12h</td></tr><tr><td>10 - 50</td><td>7,5mg/ kg/24h</td></tr><tr><td>&lt; 10</td><td>7,5mg/kg/48h</td></tr><tr><td>HD</td><td>7,5mg/kg/48h + 3,75mg/kg sau lọc</td></tr></table><p><strong>NTM</strong><strong> </strong>(Nontuberculous Mycobacteria):</p><p>TDM để hiệu chỉnh liều, với mục tiêu:</p><table class="nested-table"><tr><td>Đỉnh<br>(μg/ml)</td><td>Đáy<br>(μg/ml)</td></tr><tr><td>35-45 (15mg/kg)<br>65-80 (25mg/kg)</td><td>&lt; 1</td></tr></table><p>- CRRT: 25mg/kg/48h truyền kéo dài. Khuyến cáo TDM.</p><p>- CAPD (chỉ cho viêm phúc mạc): 2mg/kg/24h, IP.</p></div>
         </div>
         <div class="info-section">
             <div class="section-header">HD hiệu chỉnh liều ở BN suy thận - BV Bạch Mai 2023</div>
@@ -156,7 +175,7 @@
         </div>
         <div class="info-section">
             <div class="section-header">Renal Pharmacotherapy 2021</div>
-            <div class="section-content"><p><strong>Cách 1:</strong> Giữ nguyên liều thông thường, kéo dài khoảng cách đưa liều.</p><p>Dùng liều 7,5mg/kg, khoảng đưa liều có thể được tính bằng cách nhân SCr với 9.</p><p><strong>Cách 2:</strong> Giảm liều và giữ nguyên khoảng cách đưa liều (12h).</p><p>LD: 7,5mg/kg</p><p>MD =  x LD</p><p>dùng mỗi 12h.</p></div>
+            <div class="section-content"><p><strong>Cách 1:</strong> Giữ nguyên liều thông thường, kéo dài khoảng cách đưa liều.</p><p>Dùng liều 7,5mg/kg, khoảng đưa liều có thể được tính bằng cách nhân SCr với 9.</p><p><strong>Cách 2:</strong> Giảm liều và giữ nguyên khoảng cách đưa liều (12h).</p><p>LD: 7,5mg/kg</p><p>MD = <span class="fraction"><span class="frac-num">ClCr BN suy thận</span><span class="frac-den">ClCr bình thường</span></span> x LD</p><p>dùng mỗi 12h.</p></div>
         </div>
 </div>
 </body>

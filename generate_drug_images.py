@@ -24,6 +24,8 @@ COLUMN_HEADERS = [
 
 def sanitize_filename(name: str) -> str:
     """Convert drug name to a safe filename."""
+    # Replace non-breaking space and regular space
+    name = name.replace('\xa0', ' ')
     name = re.sub(r'[<>:"/\\|?*]', '_', name)
     name = name.replace(' ', '_')
     name = re.sub(r'_+', '_', name)
@@ -94,6 +96,71 @@ def extract_nested_table_html(table: Table) -> str:
     return "".join(html_parts)
 
 
+# XML namespaces for Office Math
+MATH_NS = {'m': 'http://schemas.openxmlformats.org/officeDocument/2006/math',
+           'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+
+
+def extract_math_html(math_element) -> str:
+    """Convert Office Math (OMML) element to HTML representation."""
+    # Check for fractions
+    fracs = math_element.findall('.//m:f', namespaces=MATH_NS)
+    if fracs:
+        result_parts = []
+        for frac in fracs:
+            num_texts = frac.findall('.//m:num//m:t', namespaces=MATH_NS)
+            den_texts = frac.findall('.//m:den//m:t', namespaces=MATH_NS)
+            num = ''.join([t.text or '' for t in num_texts])
+            den = ''.join([t.text or '' for t in den_texts])
+            # Create HTML fraction using CSS
+            result_parts.append(
+                f'<span class="fraction">'
+                f'<span class="frac-num">{escape(num)}</span>'
+                f'<span class="frac-den">{escape(den)}</span>'
+                f'</span>'
+            )
+        return ''.join(result_parts)
+
+    # Fallback: just extract all text
+    texts = math_element.findall('.//m:t', namespaces=MATH_NS)
+    return escape(''.join([t.text or '' for t in texts]))
+
+
+def extract_paragraph_html(para_element) -> str:
+    """Extract HTML from a paragraph element, including math formulas."""
+    html_parts = []
+
+    for child in para_element:
+        tag = child.tag.split('}')[-1]  # Get tag name without namespace
+
+        if tag == 'oMath':
+            # Math formula
+            html_parts.append(extract_math_html(child))
+        elif tag == 'r':
+            # Regular run - get text
+            t_elements = child.findall('.//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
+            text = ''.join([t.text or '' for t in t_elements])
+            if text:
+                # Check if bold
+                rPr = child.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}rPr')
+                is_bold = False
+                if rPr is not None:
+                    bold_el = rPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}b')
+                    is_bold = bold_el is not None
+
+                if is_bold:
+                    html_parts.append(f'<strong>{escape(text)}</strong>')
+                else:
+                    html_parts.append(escape(text))
+        elif tag == 'oMathPara':
+            # Math paragraph - contains oMath elements
+            math_elements = child.findall('.//m:oMath', namespaces=MATH_NS)
+            for math_el in math_elements:
+                html_parts.append(extract_math_html(math_el))
+
+    return ''.join(html_parts)
+
+
 def extract_cell_html(cell: _Cell) -> str:
     """Convert cell content (paragraphs + nested tables) to HTML."""
     html_parts = []
@@ -105,21 +172,10 @@ def extract_cell_html(cell: _Cell) -> str:
     # Process cell's XML to maintain order of paragraphs and tables
     for element in cell._tc:
         if element.tag.endswith('}p'):  # Paragraph
-            # Find corresponding paragraph object
-            for para in cell.paragraphs:
-                if para._p == element:
-                    text = para.text.strip()
-                    if text:
-                        # Escape HTML and handle formatting
-                        text_html = escape(text)
-                        # Handle bold text (check runs)
-                        for run in para.runs:
-                            if run.bold and run.text.strip():
-                                run_text = escape(run.text)
-                                text_html = text_html.replace(run_text, f'<strong>{run_text}</strong>', 1)
-
-                        html_parts.append(f'<p>{text_html}</p>')
-                    break
+            # Extract paragraph content including math
+            para_html = extract_paragraph_html(element)
+            if para_html.strip():
+                html_parts.append(f'<p>{para_html}</p>')
         elif element.tag.endswith('}tbl'):  # Table
             if table_idx < len(nested_tables):
                 html_parts.append(extract_nested_table_html(nested_tables[table_idx]))
@@ -222,6 +278,25 @@ def generate_standalone_html(drug_name: str, header_cells: list[str], drug_cells
 
         .section-content p:last-child {{
             margin-bottom: 0;
+        }}
+
+        /* Math fraction styling */
+        .fraction {{
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+            font-size: 0.85em;
+        }}
+
+        .frac-num {{
+            border-bottom: 1px solid #333;
+            padding: 0 4px 2px 4px;
+        }}
+
+        .frac-den {{
+            padding: 2px 4px 0 4px;
         }}
 
         /* Nested tables for ClCr dosing */

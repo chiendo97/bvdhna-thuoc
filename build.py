@@ -13,6 +13,8 @@ NAMES_FILE = BASE_DIR / "page_names.json"
 
 def sanitize_filename(name: str) -> str:
     """Convert drug name to a safe filename (must match generate_drug_images.py)."""
+    # Replace non-breaking space and regular space
+    name = name.replace('\xa0', ' ')
     name = re.sub(r'[<>:"/\\|?*]', "_", name)
     name = name.replace(" ", "_")
     name = re.sub(r"_+", "_", name)
