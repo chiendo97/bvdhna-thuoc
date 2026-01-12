@@ -62,11 +62,35 @@ def get_cell_span(cell: _Cell) -> tuple[int, int]:
     return colspan, rowspan
 
 
+def get_row_text(row) -> tuple[str, ...]:
+    """Get normalized text content of a row for comparison."""
+    seen_cells = set()
+    texts = []
+    for cell in row.cells:
+        cell_id = id(cell._tc)
+        if cell_id in seen_cells:
+            continue
+        seen_cells.add(cell_id)
+        texts.append(cell.text.strip().replace('\n', ' '))
+    return tuple(texts)
+
+
 def extract_nested_table_html(table: Table) -> str:
-    """Convert a nested DOCX table to HTML, handling merged cells."""
+    """Convert a nested DOCX table to HTML, handling merged cells and duplicate headers."""
     html_parts = ['<table class="nested-table">']
 
-    for row in table.rows:
+    # Get first row text to detect duplicate headers
+    first_row_text = None
+    if table.rows:
+        first_row_text = get_row_text(table.rows[0])
+
+    for row_idx, row in enumerate(table.rows):
+        # Skip duplicate header rows (rows that match the first row, except the first row itself)
+        if row_idx > 0 and first_row_text:
+            current_row_text = get_row_text(row)
+            if current_row_text == first_row_text:
+                continue  # Skip this duplicate header row
+
         html_parts.append("<tr>")
         seen_cells = set()  # Track cells we've already processed (by their XML element id)
 
