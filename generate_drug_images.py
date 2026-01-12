@@ -120,9 +120,70 @@ def extract_nested_table_html(table: Table) -> str:
     return "".join(html_parts)
 
 
-# XML namespaces for Office Math
+# XML namespaces for Office Math and Drawing
 MATH_NS = {'m': 'http://schemas.openxmlformats.org/officeDocument/2006/math',
            'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+
+DRAWING_NS = {
+    'a': 'http://schemas.openxmlformats.org/drawingml/2006/main',
+    'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+    'wp': 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing',
+    'pic': 'http://schemas.openxmlformats.org/drawingml/2006/picture',
+    'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
+}
+
+# Global variable to store document part for image extraction
+_doc_part = None
+_image_counter = 0
+
+
+def extract_image(drawing_element, drug_name: str) -> str | None:
+    """Extract image from drawing element and save to disk. Returns image filename or None."""
+    global _doc_part, _image_counter
+
+    if _doc_part is None:
+        return None
+
+    # Find blip element with image reference
+    blips = drawing_element.findall('.//a:blip', namespaces=DRAWING_NS)
+    if not blips:
+        return None
+
+    for blip in blips:
+        embed_id = blip.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed')
+        if not embed_id:
+            continue
+
+        # Get the image from relationships
+        rel = _doc_part.rels.get(embed_id)
+        if not rel:
+            continue
+
+        try:
+            image_part = rel.target_part
+            # Determine extension from content type
+            content_type = image_part.content_type
+            ext = 'png'
+            if 'jpeg' in content_type or 'jpg' in content_type:
+                ext = 'jpg'
+            elif 'gif' in content_type:
+                ext = 'gif'
+
+            # Generate unique filename
+            _image_counter += 1
+            safe_drug = sanitize_filename(drug_name)
+            img_filename = f"{safe_drug}_img{_image_counter}.{ext}"
+            img_path = OUTPUT_DIR / img_filename
+
+            # Save image
+            with open(img_path, 'wb') as f:
+                f.write(image_part.blob)
+
+            return img_filename
+        except Exception as e:
+            print(f"    Warning: Could not extract image: {e}")
+
+    return None
 
 
 def extract_math_html(math_element) -> str:
@@ -150,8 +211,8 @@ def extract_math_html(math_element) -> str:
     return escape(''.join([t.text or '' for t in texts]))
 
 
-def extract_paragraph_html(para_element) -> str:
-    """Extract HTML from a paragraph element, including math formulas."""
+def extract_paragraph_html(para_element, drug_name: str = "") -> str:
+    """Extract HTML from a paragraph element, including math formulas and images."""
     html_parts = []
 
     for child in para_element:
@@ -161,7 +222,15 @@ def extract_paragraph_html(para_element) -> str:
             # Math formula
             html_parts.append(extract_math_html(child))
         elif tag == 'r':
-            # Regular run - get text
+            # Regular run - check for drawings (images) first
+            drawing = child.find('.//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}drawing')
+            if drawing is not None:
+                img_filename = extract_image(drawing, drug_name)
+                if img_filename:
+                    html_parts.append(f'<img src="{img_filename}" class="embedded-image" alt="Graph">')
+                continue
+
+            # Get text
             t_elements = child.findall('.//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t')
             text = ''.join([t.text or '' for t in t_elements])
             if text:
@@ -185,7 +254,7 @@ def extract_paragraph_html(para_element) -> str:
     return ''.join(html_parts)
 
 
-def extract_cell_html(cell: _Cell) -> str:
+def extract_cell_html(cell: _Cell, drug_name: str = "") -> str:
     """Convert cell content (paragraphs + nested tables) to HTML."""
     html_parts = []
 
@@ -196,8 +265,8 @@ def extract_cell_html(cell: _Cell) -> str:
     # Process cell's XML to maintain order of paragraphs and tables
     for element in cell._tc:
         if element.tag.endswith('}p'):  # Paragraph
-            # Extract paragraph content including math
-            para_html = extract_paragraph_html(element)
+            # Extract paragraph content including math and images
+            para_html = extract_paragraph_html(element, drug_name)
             if para_html.strip():
                 html_parts.append(f'<p>{para_html}</p>')
         elif element.tag.endswith('}tbl'):  # Table
@@ -350,6 +419,16 @@ def generate_standalone_html(drug_name: str, header_cells: list[str], drug_cells
             font-weight: 600;
         }}
 
+        /* Embedded images */
+        .embedded-image {{
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 12px auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }}
+
         /* Responsive adjustments */
         @media (max-width: 768px) {{
             body {{
@@ -406,6 +485,8 @@ def save_html_file(html: str, output_path: Path) -> None:
 
 def main() -> None:
     """Generate responsive HTML files for all drugs."""
+    global _doc_part, _image_counter
+
     print("Generating drug HTML files from DOCX...")
 
     # Create output directory
@@ -414,6 +495,10 @@ def main() -> None:
     # Load DOCX
     doc = Document(DOCX_FILE)
     main_table = doc.tables[0]
+
+    # Set document part for image extraction
+    _doc_part = doc.part
+    _image_counter = 0
 
     # Extract header row
     header_row = main_table.rows[0]
@@ -433,7 +518,7 @@ def main() -> None:
             # Extract cell HTML for each column
             drug_cells = []
             for cell in row.cells:
-                cell_html = extract_cell_html(cell)
+                cell_html = extract_cell_html(cell, drug_name)
                 drug_cells.append(cell_html)
 
             # Generate standalone HTML
